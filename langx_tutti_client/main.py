@@ -3,7 +3,7 @@ from typing import Optional, Tuple, Callable
 
 from tutti_client import TuttiClient
 from ducts_client import Duct
-from .market.controller import TuttiMarketController
+from .market_controller import TuttiMarketController
 
 class LangXTuttiClient:
     def __init__(self):
