@@ -1,0 +1,7 @@
+__pycache__/
+.python-version
+*.swp
+build/
+dist/
+*.egg-info
+.git-bak/
