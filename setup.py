@@ -149,7 +149,7 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[ # Optional
-        'tutti_client==0.3.0'
+        'tutti_client==0.3.1'
     ],
 
     # List additional groups of dependencies here (e.g. development
