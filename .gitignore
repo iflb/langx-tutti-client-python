@@ -5,3 +5,5 @@ build/
 dist/
 *.egg-info
 .git-bak/
+.ffmpeg.md5
+.supported_video_file_extensions
