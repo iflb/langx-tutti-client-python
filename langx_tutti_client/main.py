@@ -4,11 +4,16 @@ from typing import Optional, Tuple, Callable
 from tutti_client import TuttiClient
 from ducts_client import Duct
 from .scatt_controller import ScattController
+from .scatt_modules.scatt_video_utils import ScattVideoUtilsError
 from .market_controller import TuttiMarketController
 
 class LangXTuttiClientConnectionError(Exception):
     def __init__(self, resource, err):
         self.resource = resource
+        self.err = err
+
+class LangXTuttiClientEnvironmentError(Exception):
+    def __init__(self, err):
         self.err = err
 
 class LangXTuttiClient:
@@ -17,6 +22,11 @@ class LangXTuttiClient:
         self.scatt = ScattController(Duct())
         self.tutti = TuttiClient()
         self.market = TuttiMarketController(Duct())
+
+        try:
+            ScattController.test_operating_condition()
+        except ScattVideoUtilsError as e:
+            raise LangXTuttiClientEnvironmentError(e) from e
 
     async def open(self, scatt_host: Optional[str] = None, works_host: Optional[str] = None, market_host: Optional[str] = None) -> None:
         tasks = []
@@ -97,7 +107,48 @@ class LangXTuttiClient:
         await self.tutti.resource.sign_out()
 
 
-    async def publish_scatt_tasks_to_market(self, automation_parameter_set_id: str, student_id: str, video_id: str) -> Tuple[str, str]:
+    async def publish_scatt_tasks_to_market(
+        self,
+        automation_parameter_set_id: str,
+        student_id: str,
+        video_id: str,
+        video_file_path: str,
+        elan_tsv_file_path: str=None,
+        overwrite_files: bool=False,
+    ) -> Tuple[str, str]:
+
+        if ScattController.is_normalization_needed(video_file_path):
+            offset_time = ScattController.get_start_offset_time(video_file_path)
+            print('video normalization is needed. (offset: {0} sec)'.format(offset_time.second))
+
+            print('>>> normalizing video file...')
+            video_file_base_path, video_file_extension = video_file_path.rsplit('.', 1)
+            normalized_video_file_path = video_file_base_path + '.normalized.' + video_file_extension
+            ScattController.generate_normalized_video_file(video_file_path, normalized_video_file_path)
+            print('<<< normalizing video file completed.')
+            video_file_path = normalized_video_file_path
+
+        print('>>> generating waveform digest...')
+        waveform_digest_data = ScattController.generate_waveform_digest_file_from_video_file(video_file_path)
+        print('<<< generating waveform digest completed.')
+
+        print('>>> generating Scatt data...')
+        if elan_tsv_file_path is None:
+            scatt_data = ScattController.generate_default_data_for_cefr_scoring()
+        else:
+            with open(elan_tsv_file_path, 'rt') as file:
+                scatt_data = ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv(file.read())
+        print('<<< generating Scatt data completed.')
+
+        await self.scatt.upload_scatt_resources_to_server(
+            student_id,
+            video_id,
+            video_file_path,
+            scatt_data,
+            waveform_digest_data,
+            overwrite_files,
+        )
+
         data = await self.tutti._duct.call(
                 self.tutti._duct.EVENT['AUTOMATION_PARAMETER_SET_GET'],
                 {
