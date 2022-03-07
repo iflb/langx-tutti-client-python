@@ -13,7 +13,7 @@ class ScattController:
         await self._duct.open(wsd_url)
 
     @staticmethod
-    def generate_empty_data_for_cefr_scoring_from_elan_tsv(
+    def generate_default_data_for_cefr_scoring(
         author_id: str = DEFAULT_AUTHOR_ID,
         author_name: str = DEFAULT_AUTHOR_NAME,
     ) -> str:
