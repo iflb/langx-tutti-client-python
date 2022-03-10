@@ -6,14 +6,14 @@ from langx_tutti_client.main import LangXTuttiClient
 #AUTOMATION_PARAMETER_SET_ID = '28e806fa133d4b3979690c198dbfbc824d15ce52'
 
 async def on_scatt_response(data):
-    print('Data received!')
-    data = data['content']['answers']['timeline_data_set']
+    print('Data received! (watch_id: {})'.format(data['last_watch_id']))
+    timeline_data_set = data['data']['answers']['scattDataRawObj']['timeline_data_set']
     print({
         index: {
             'name': val['name'],
             'segment_data_type': val['segment_data_type'],
             'segment0': val['segments']['0']
-        } for index, val in data.items()
+        } for index, val in timeline_data_set.items()
     })
 
 async def on_error(msg):
@@ -27,7 +27,7 @@ async def main():
     try:
         await client.open(
                 scatt_host='https://teai.scatt.io',
-                works_host='https://teai.tutti.work',
+                works_host='https://teai.tutti.works',
                 market_host='https://teai.tutti.market'
             )
         await client.sign_in(
@@ -51,15 +51,17 @@ async def main():
                     )
 
         elif mode == 'watch_response':
-            automation_parameter_set_id = sys.argv[2]
-            if len(sys.argv) != 3:
-                print('Usage:  python example.py watch_response <automation_parameter_set_id>')
+            if len(sys.argv) < 3:
+                print('Usage:  python example.py watch_response <automation_parameter_set_id> <last_watch_id>')
                 print('')
             else:
+                automation_parameter_set_id = sys.argv[2]
+                last_watch_id = sys.argv[3] if len(sys.argv) == 4 else '+'
                 print('Started watching response...')
                 await client.watch_responses_for_scatt_tasks(
                         automation_parameter_set_id,
                         handler = on_scatt_response,
+                        last_watch_id = last_watch_id
                     )
 
         elif mode == 'only_connect':

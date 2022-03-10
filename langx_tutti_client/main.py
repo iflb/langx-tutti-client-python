@@ -55,7 +55,7 @@ class LangXTuttiClient:
 
         if host[-1] == '/': host = host[:-1]
         self.tutti._duct.connection_listener.onerror = on_error
-        await self.tutti._duct.open(host + '/ducts/wsd')
+        await self.tutti.open(host + '/ducts/wsd')
         await asyncio.sleep(0.1)
         if err:
             raise LangXTuttiClientConnectionError('Tutti.works', err[0])
@@ -107,16 +107,13 @@ class LangXTuttiClient:
         await self.tutti.resource.sign_out()
 
 
-    async def publish_scatt_tasks_to_market(
-        self,
-        automation_parameter_set_id: str,
+    async def convert_and_upload_files_from_path(
         student_id: str,
         video_id: str,
         video_file_path: str,
-        elan_tsv_file_path: str=None,
-        overwrite_files: bool=False,
-    ) -> Tuple[str, str]:
-
+        elan_tsv_file_path: str = None,
+        overwrite_files: bool = False,
+    ) -> None:
         if ScattController.is_normalization_needed(video_file_path):
             offset_time = ScattController.get_start_offset_time(video_file_path)
             print('video normalization is needed. (offset: {0} sec)'.format(offset_time.second))
@@ -148,6 +145,19 @@ class LangXTuttiClient:
             waveform_digest_data,
             overwrite_files,
         )
+
+
+    async def publish_scatt_tasks_to_market(
+        self,
+        automation_parameter_set_id: str,
+        student_id: str,
+        video_id: str,
+        #video_file_path: str,
+        #elan_tsv_file_path: str = None,
+        #overwrite_files: bool = False,
+    ) -> Tuple[str, str]:
+
+        #await self.convert_and_upload_files_from_path(self, student_id, video_id, video_file_path, elan_tsv_file_path, overwrite_files)
 
         data = await self.tutti._duct.call(
                 self.tutti._duct.EVENT['AUTOMATION_PARAMETER_SET_GET'],
@@ -234,18 +244,15 @@ class LangXTuttiClient:
             import traceback
             traceback.print_exc()
 
-    async def watch_responses_for_scatt_tasks(self, automation_parameter_set_id: str, handler: Callable[[dict], None]) -> None:
-        async def _handler(rid, eid, data):
-            await handler(data)
-
-        eid = self.tutti._duct.EVENT['RESPONSE_WATCH_FOR_AUTOMATION_PARAMETER_SET']
-        self.tutti._duct.set_event_handler(eid, _handler)
-        await self.tutti._duct.send(
-            self.tutti._duct.next_rid(),
-            eid,
-            {
-                'automation_parameter_set_id': automation_parameter_set_id,
-                'access_token': self.tutti.account_info['access_token']
-            }
+    async def watch_responses_for_scatt_tasks(
+        self,
+        automation_parameter_set_id: str,
+        handler: Callable[[dict], None],
+        last_watch_id: str = '+'
+    ) -> None:
+        self.tutti.resource.on('watch_responses_for_automation_parameter_set', handler)
+        await self.tutti.resource.watch_responses_for_automation_parameter_set.send(
+            automation_parameter_set_id = automation_parameter_set_id,
+            last_watch_id = last_watch_id,
+            exclusive = True
         )
-
