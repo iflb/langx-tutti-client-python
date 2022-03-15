@@ -8,13 +8,13 @@ from langx_tutti_client.main import LangXTuttiClient
 async def on_scatt_response(data):
     print('Data received! (watch_id: {})'.format(data['last_watch_id']))
     timeline_data_set = data['data']['answers']['scattDataRawObj']['timeline_data_set']
-    print({
-        index: {
-            'name': val['name'],
-            'segment_data_type': val['segment_data_type'],
-            'segment0': val['segments']['0']
-        } for index, val in timeline_data_set.items()
-    })
+    #print({
+    #    index: {
+    #        'name': val['name'],
+    #        'segment_data_type': val['segment_data_type'],
+    #        'segment0': val['segments']['0']
+    #    } for index, val in timeline_data_set.items()
+    #})
 
 async def on_error(msg):
     print('on_error', msg)
@@ -37,17 +37,28 @@ async def main():
 
         if mode == 'publish':
             automation_parameter_set_id = sys.argv[2]
-            if len(sys.argv) != 5:
-                print('Usage:  python example.py publish <automation_parameter_set_id> <student_id> <video_id>')
+            if len(sys.argv) < 5:
+                print('Usage:  python example.py publish <automation_parameter_set_id> <student_id> <video_id> <video_file_path> <elan_tsv_file_path>')
                 print('')
             else:
                 student_id = sys.argv[3]
                 video_id = sys.argv[4]
+                try:
+                    video_file_path = sys.argv[5]
+                except:
+                    video_file_path = None
+                try:
+                    elan_tsv_file_path = sys.argv[6]
+                except:
+                    elan_tsv_file_path = None
 
                 ngid, jid = await client.publish_scatt_tasks_to_market(
                         automation_parameter_set_id,
                         student_id = student_id,
-                        video_id = video_id
+                        video_id = video_id,
+                        video_file_path = video_file_path,
+                        elan_tsv_file_path = elan_tsv_file_path,
+                        overwrite_files = False,
                     )
 
         elif mode == 'watch_response':
@@ -64,7 +75,7 @@ async def main():
                         last_watch_id = last_watch_id
                     )
 
-        elif mode == 'only_connect':
+        elif mode == 'test_connection':
             print('open and sign_in finished')
 
     except Exception as e:
