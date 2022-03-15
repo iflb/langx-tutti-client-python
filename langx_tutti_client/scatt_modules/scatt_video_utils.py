@@ -23,7 +23,9 @@ def get_waveform_digest_generator_path():
     waveform_digest_generator_filename = 'create_waveform_digest'
     if platform_system_name == 'Darwin':
         if platform_machine_name == 'x86_64':
-            waveform_digest_generator_path = path.join(SCATT_MODULES_DIR, 'bin', 'macosx', waveform_digest_generator_filename)
+            waveform_digest_generator_path = path.join(SCATT_MODULES_DIR, 'bin', 'macosx_x86_64', waveform_digest_generator_filename)
+        elif platform_machine_name == 'arm64':
+            waveform_digest_generator_path = path.join(SCATT_MODULES_DIR, 'bin', 'macosx_arm64', waveform_digest_generator_filename)
         else:
             raise ScattVideoUtilsError('{0:s}/{1:s} is unexpected platform.'.format(platform_system_name, platform_machine_name))
 
