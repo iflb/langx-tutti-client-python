@@ -171,7 +171,7 @@ setup(
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
     package_data={  # Optional
-        '': package_files('scatt_modules/bin/*'),
+        '': ['scatt_modules/bin/*'],
     },
     include_package_data=True,
 
