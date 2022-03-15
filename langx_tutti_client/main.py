@@ -117,7 +117,7 @@ class LangXTuttiClient:
         overwrite_files: bool = False,
     ) -> Tuple[str, str]:
 
-        if video_file_path and elan_tsv_file_path:
+        if video_file_path:
             await self.scatt.prepare_and_upload_files(student_id, video_id, video_file_path, elan_tsv_file_path, overwrite_files)
 
         data = await self.tutti._duct.call(
