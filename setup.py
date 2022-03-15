@@ -149,7 +149,7 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[ # Optional
-        'tutti_client==0.3.1'
+        'tutti_client==0.3.3'
     ],
 
     # List additional groups of dependencies here (e.g. development
@@ -171,8 +171,9 @@ setup(
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
     package_data={  # Optional
-        '': ['scatt_modules/bin/*'],
+        '': package_files('scatt_modules/bin/*'),
     },
+    include_package_data=True,
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
