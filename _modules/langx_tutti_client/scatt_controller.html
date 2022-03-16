@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>langx_tutti_client.scatt_controller &mdash; LangX Tutti Client  ドキュメント</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> LangX Tutti Client
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">リファレンス</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LangX Tutti Client</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">モジュールコード</a> &raquo;</li>
+      <li>langx_tutti_client.scatt_controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>langx_tutti_client.scatt_controller のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.scatt_modules</span> <span class="kn">import</span> <span class="n">scatt_data_utils</span><span class="p">,</span> <span class="n">scatt_video_utils</span><span class="p">,</span> <span class="n">scatt_file_storage</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">DEFAULT_AUTHOR_ID</span> <span class="o">=</span> <span class="s1">&#39;langx_tutti_client&#39;</span>
+<span class="n">DEFAULT_AUTHOR_NAME</span> <span class="o">=</span> <span class="s1">&#39;LangX Tutti Client&#39;</span>
+
+<div class="viewcode-block" id="ScattController"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController">[ドキュメント]</a><span class="k">class</span> <span class="nc">ScattController</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duct</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span> <span class="o">=</span> <span class="n">duct</span>
+
+<div class="viewcode-block" id="ScattController.open"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.open">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wsd_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">wsd_url</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.generate_default_data_for_cefr_scoring"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.generate_default_data_for_cefr_scoring">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_default_data_for_cefr_scoring</span><span class="p">(</span>
+        <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_AUTHOR_ID</span><span class="p">,</span>
+        <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_AUTHOR_NAME</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">scatt_data</span> <span class="o">=</span> <span class="n">scatt_data_utils</span><span class="o">.</span><span class="n">generate_default_data_for_cefr_scoring</span><span class="p">(</span>
+            <span class="n">author_id</span><span class="p">,</span>
+            <span class="n">author_name</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">scatt_data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_to_data_for_cefr_scoring_from_elan_tsv</span><span class="p">(</span>
+        <span class="n">tsv_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_AUTHOR_ID</span><span class="p">,</span>
+        <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_AUTHOR_NAME</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">scatt_data</span> <span class="o">=</span> <span class="n">scatt_data_utils</span><span class="o">.</span><span class="n">convert_to_data_for_cefr_scoring_from_elan_tsv</span><span class="p">(</span>
+            <span class="n">tsv_string</span><span class="p">,</span>
+            <span class="n">author_id</span><span class="p">,</span>
+            <span class="n">author_name</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">scatt_data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.get_start_offset_time"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.get_start_offset_time">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_start_offset_time</span><span class="p">(</span><span class="n">input_video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">get_start_offset_time</span><span class="p">(</span><span class="n">input_video_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.is_normalization_needed"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.is_normalization_needed">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_normalization_needed</span><span class="p">(</span><span class="n">input_video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">is_normalization_needed</span><span class="p">(</span><span class="n">input_video_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.generate_normalized_video_file"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.generate_normalized_video_file">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_normalized_video_file</span><span class="p">(</span>
+        <span class="n">input_video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">output_video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">generate_normalized_video_file</span><span class="p">(</span>
+            <span class="n">input_video_path</span><span class="p">,</span>
+            <span class="n">output_video_path</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.get_supported_video_file_extensions"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.get_supported_video_file_extensions">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_supported_video_file_extensions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">get_supported_video_file_extensions</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ScattController.test_operating_condition"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.test_operating_condition">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">test_operating_condition</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">test_operating_condition</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ScattController.generate_waveform_digest_file"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.generate_waveform_digest_file">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_waveform_digest_file</span><span class="p">(</span><span class="n">input_wav_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">generate_waveform_digest_file</span><span class="p">(</span><span class="n">input_wav_file_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.generate_waveform_digest_file_from_video_file"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.generate_waveform_digest_file_from_video_file">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_waveform_digest_file_from_video_file</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">generate_waveform_digest_file_from_video_file</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.normalize_video_offset"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.normalize_video_offset">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">normalize_video_offset</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ScattController</span><span class="o">.</span><span class="n">is_normalization_needed</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">):</span>
+            <span class="n">offset_time</span> <span class="o">=</span> <span class="n">ScattController</span><span class="o">.</span><span class="n">get_start_offset_time</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;video normalization is needed. (offset: </span><span class="si">{0}</span><span class="s1"> sec)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset_time</span><span class="o">.</span><span class="n">second</span><span class="p">))</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt;&gt; normalizing video file...&#39;</span><span class="p">)</span>
+            <span class="n">video_file_base_path</span><span class="p">,</span> <span class="n">video_file_extension</span> <span class="o">=</span> <span class="n">video_file_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">normalized_video_file_path</span> <span class="o">=</span> <span class="n">video_file_base_path</span> <span class="o">+</span> <span class="s1">&#39;.normalized.&#39;</span> <span class="o">+</span> <span class="n">video_file_extension</span>
+            <span class="n">ScattController</span><span class="o">.</span><span class="n">generate_normalized_video_file</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">,</span> <span class="n">normalized_video_file_path</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&lt;&lt;&lt; normalizing video file completed.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">normalized_video_file_path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;skipping video normalization&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">video_file_path</span></div>
+        
+<div class="viewcode-block" id="ScattController.upload_scatt_resources_to_server"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.upload_scatt_resources_to_server">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upload_scatt_resources_to_server</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">student_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">scatt_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">waveform_digest_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+        <span class="n">video_file_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">video_data</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">await</span> <span class="n">scatt_file_storage</span><span class="o">.</span><span class="n">upload_resources</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="p">,</span>
+                <span class="n">student_id</span><span class="p">,</span>
+                <span class="n">video_id</span><span class="p">,</span>
+                <span class="n">video_file_name</span><span class="p">,</span>
+                <span class="n">video_data</span><span class="p">,</span>
+                <span class="n">scatt_data</span><span class="p">,</span>
+                <span class="n">waveform_digest_data</span><span class="p">,</span>
+                <span class="n">overwrite</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.prepare_and_upload_files"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.prepare_and_upload_files">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">prepare_and_upload_files</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">student_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">elan_tsv_file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">overwrite_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">video_file_path</span> <span class="o">=</span> <span class="n">ScattController</span><span class="o">.</span><span class="n">normalize_video_offset</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt;&gt; generating waveform digest...&#39;</span><span class="p">)</span>
+        <span class="n">waveform_digest_data</span> <span class="o">=</span> <span class="n">ScattController</span><span class="o">.</span><span class="n">generate_waveform_digest_file_from_video_file</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&lt;&lt;&lt; generating waveform digest completed.&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt;&gt; generating Scatt data...&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">elan_tsv_file_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">scatt_data</span> <span class="o">=</span> <span class="n">ScattController</span><span class="o">.</span><span class="n">generate_default_data_for_cefr_scoring</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">elan_tsv_file_path</span><span class="p">,</span> <span class="s1">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">scatt_data</span> <span class="o">=</span> <span class="n">ScattController</span><span class="o">.</span><span class="n">convert_to_data_for_cefr_scoring_from_elan_tsv</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&lt;&lt;&lt; generating Scatt data completed.&#39;</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_scatt_resources_to_server</span><span class="p">(</span>
+            <span class="n">student_id</span><span class="p">,</span>
+            <span class="n">video_id</span><span class="p">,</span>
+            <span class="n">video_file_path</span><span class="p">,</span>
+            <span class="n">scatt_data</span><span class="p">,</span>
+            <span class="n">waveform_digest_data</span><span class="p">,</span>
+            <span class="n">overwrite_files</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.get_uploaded_resource_info"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.get_uploaded_resource_info">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_uploaded_resource_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">scatt_file_storage</span><span class="o">.</span><span class="n">get_uploaded_resource_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattController.show_resource_tree"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.show_resource_tree">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">show_resource_tree</span><span class="p">(</span><span class="n">resource_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scatt_file_storage</span><span class="o">.</span><span class="n">show_resource_tree</span><span class="p">(</span><span class="n">resource_info</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Intelligent Framework Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>langx_tutti_client.market_controller &mdash; LangX Tutti Client  ドキュメント</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> LangX Tutti Client
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">リファレンス</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LangX Tutti Client</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">モジュールコード</a> &raquo;</li>
+      <li>langx_tutti_client.market_controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>langx_tutti_client.market_controller のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+
+<div class="viewcode-block" id="TuttiMarketController"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.market_controller.TuttiMarketController">[ドキュメント]</a><span class="k">class</span> <span class="nc">TuttiMarketController</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;Tutti.marketに関連する操作を行うオブジェクトです。</span>
+
+<span class="sd">    現状、必要最低限のメソッド群のみを定義しています。JavaScriptにおいて既に `こちら`_ に定義された</span>
+<span class="sd">    操作のうち、このクラスに実装が必要なものは別途問い合わせてください。</span>
+
+<span class="sd">    .. _こちら:</span>
+<span class="sd">        https://github.com/iflb/tutti-market/blob/a4b6b9054183f761a1692ff9633a84e80d93ea3c/frontend/src/scripts/ducts.js#L142</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duct</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span> <span class="o">=</span> <span class="n">duct</span>
+
+<div class="viewcode-block" id="TuttiMarketController.open"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.market_controller.TuttiMarketController.open">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wsd_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.marketサーバーへ接続します。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            wsd_url: DUCTSサーバーへ接続するエンドポイント</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">wsd_url</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TuttiMarketController.register_job"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.market_controller.TuttiMarketController.register_job">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">register_job</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">job_class_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">job_parameter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_job_assignments_max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">priority_score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;ジョブを発注します。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            job_class_id: ジョブクラスID</span>
+<span class="sd">            job_parameter: 発注するジョブへ与えるパラメータ群</span>
+<span class="sd">            description: ジョブの説明文（リクエスタから見えるメモ用）</span>
+<span class="sd">            num_job_assignments_max: 収集する回答数上限</span>
+<span class="sd">            priority_score: 優先度。値が小さいほど優先度が高く、優先的にワーカーへ割り当てられます。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">EVENT</span><span class="p">[</span><span class="s1">&#39;REGISTER_JOB&#39;</span><span class="p">],</span> <span class="p">{</span>
+                <span class="s1">&#39;access_token&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
+                <span class="s1">&#39;job_class_id&#39;</span><span class="p">:</span> <span class="n">job_class_id</span><span class="p">,</span>
+                <span class="s1">&#39;job_parameter&#39;</span><span class="p">:</span> <span class="n">job_parameter</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                <span class="s1">&#39;num_job_assignments_max&#39;</span><span class="p">:</span> <span class="n">num_job_assignments_max</span><span class="p">,</span>
+                <span class="s1">&#39;priority_score&#39;</span><span class="p">:</span> <span class="n">priority_score</span>
+            <span class="p">})</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="TuttiMarketController.sign_in"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.market_controller.TuttiMarketController.sign_in">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">access_token_lifetime</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.marketにサインインします。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">EVENT</span><span class="p">[</span><span class="s1">&#39;SIGN_IN&#39;</span><span class="p">],</span> <span class="p">{</span>
+            <span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+            <span class="s1">&#39;password_hash&#39;</span><span class="p">:</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha512</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">(),</span>
+            <span class="s1">&#39;access_token_lifetime&#39;</span><span class="p">:</span> <span class="n">access_token_lifetime</span>
+        <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">][</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="TuttiMarketController.sign_out"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.market_controller.TuttiMarketController.sign_out">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_out</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.marketからサインアウトします。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">EVENT</span><span class="p">[</span><span class="s1">&#39;SIGN_OUT&#39;</span><span class="p">],</span> <span class="p">{</span>
+            <span class="s1">&#39;access_token&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+        <span class="p">})</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Intelligent Framework Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

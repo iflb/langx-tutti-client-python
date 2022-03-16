@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>langx_tutti_client.scatt_modules.scatt_data_utils &mdash; LangX Tutti Client  ドキュメント</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="検索" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> LangX Tutti Client
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">リファレンス</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LangX Tutti Client</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">モジュールコード</a> &raquo;</li>
+      <li>langx_tutti_client.scatt_modules.scatt_data_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>langx_tutti_client.scatt_modules.scatt_data_utils のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+
+<span class="n">LATEST_SCATT_DATA_VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
+
+
+<div class="viewcode-block" id="ScattDataUtilsError"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.ScattDataUtilsError">[ドキュメント]</a><span class="k">class</span> <span class="nc">ScattDataUtilsError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="ScattDataForCefrScoring"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.ScattDataForCefrScoring">[ドキュメント]</a><span class="k">class</span> <span class="nc">ScattDataForCefrScoring</span><span class="p">():</span>
+    <span class="n">DEFAULT_CEFR_SCORE</span> <span class="o">=</span> <span class="mi">5</span>
+
+<div class="viewcode-block" id="ScattDataForCefrScoring.CefrQualitativeFeatureNames"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.ScattDataForCefrScoring.CefrQualitativeFeatureNames">[ドキュメント]</a>    <span class="k">class</span> <span class="nc">CefrQualitativeFeatureNames</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="ScattDataForCefrScoring.CefrQualitativeFeatureNames.get_all_enums"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.ScattDataForCefrScoring.CefrQualitativeFeatureNames.get_all_enums">[ドキュメント]</a>        <span class="nd">@classmethod</span>
+        <span class="k">def</span> <span class="nf">get_all_enums</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScattDataForCefrScoring.CefrQualitativeFeatureNames.get_all_values"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.ScattDataForCefrScoring.CefrQualitativeFeatureNames.get_all_values">[ドキュメント]</a>        <span class="nd">@classmethod</span>
+        <span class="k">def</span> <span class="nf">get_all_values</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_all_enums</span><span class="p">()))</span></div>
+
+        <span class="n">RANGE</span> <span class="o">=</span> <span class="s1">&#39;Range&#39;</span>
+        <span class="n">ACCURACY</span> <span class="o">=</span> <span class="s1">&#39;Accuracy&#39;</span>
+        <span class="n">FLUENCY</span> <span class="o">=</span> <span class="s1">&#39;Fluency&#39;</span>
+        <span class="n">PHONOLOGY</span> <span class="o">=</span> <span class="s1">&#39;Phonology&#39;</span>
+        <span class="n">INTERACTION</span> <span class="o">=</span> <span class="s1">&#39;Interaction&#39;</span>
+        <span class="n">COHERENCE</span> <span class="o">=</span> <span class="s1">&#39;Coherence&#39;</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_generate_default_cefr_score_timeline_segment_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">timeline_segment_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_segment_data</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_CEFR_SCORE</span>
+        <span class="n">timeline_segment_data</span><span class="p">[</span><span class="s1">&#39;aspects&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">timeline_segment_data</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_generate_default_cefr_score_timeline_segment</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">timeline_segment</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_segment</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">timeline_segment</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">timeline_segment</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_generate_default_cefr_score_timeline_segment_data</span><span class="p">()</span>
+        <span class="n">timeline_segment</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">timeline_segment</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_generate_default_cefr_score_timeline_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">timeline_data_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">qualitative_feature_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">timeline_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qualitative_feature_name</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;segment_data_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;CefrScoreSegmentData&#39;</span>
+        <span class="n">timeline_segment_id_number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">timeline_segment_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">timeline_segment_id_number</span><span class="p">)</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;segments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;segments&#39;</span><span class="p">][</span><span class="n">timeline_segment_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_generate_default_cefr_score_timeline_segment</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;created_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">created_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;modified_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">created_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;author_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_id</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;author_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_name</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;timeline_data_idx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeline_data_idx</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;hidden&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;readonly&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">timeline_data</span>
+
+<div class="viewcode-block" id="ScattDataForCefrScoring.generate_default_data_ver_0_5"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.ScattDataForCefrScoring.generate_default_data_ver_0_5">[ドキュメント]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">generate_default_data_ver_0_5</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">scatt_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">scatt_data</span><span class="p">[</span><span class="s1">&#39;data_version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
+        <span class="n">scatt_data</span><span class="p">[</span><span class="s1">&#39;timeline_data_set&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_data_id_number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">qualitative_feature_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CefrQualitativeFeatureNames</span><span class="o">.</span><span class="n">get_all_values</span><span class="p">():</span>
+            <span class="n">timeline_data_idx</span> <span class="o">=</span> <span class="n">timeline_data_id_number</span>
+            <span class="n">timeline_data_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">timeline_data_id_number</span><span class="p">)</span>
+            <span class="n">scatt_data</span><span class="p">[</span><span class="s1">&#39;timeline_data_set&#39;</span><span class="p">][</span><span class="n">timeline_data_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_generate_default_cefr_score_timeline_data</span><span class="p">(</span>
+                <span class="n">timeline_data_idx</span><span class="p">,</span>
+                <span class="n">qualitative_feature_name</span><span class="p">,</span>
+                <span class="n">author_id</span><span class="p">,</span>
+                <span class="n">author_name</span><span class="p">,</span>
+                <span class="n">created_at</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">timeline_data_id_number</span> <span class="o">=</span> <span class="n">timeline_data_id_number</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">scatt_data</span><span class="p">[</span><span class="s1">&#39;references&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">scatt_data</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_generate_label_timeline_segment_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">timeline_segment_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_segment_data</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="k">return</span> <span class="n">timeline_segment_data</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_generate_label_timeline_segment</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">begin_time_sec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_time_sec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">math</span>
+        <span class="n">timeline_segment</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_segment</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">begin_time_sec</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">timeline_segment</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">end_time_sec</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">timeline_segment</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">timeline_segment</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_generate_label_timeline_segment_data</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">timeline_segment</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_generate_empty_label_timeline_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">timeline_data_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeline_data_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">timeline_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeline_data_name</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;segment_data_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;LabelSegmentData&#39;</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;segments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;created_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">created_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;modified_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">created_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;author_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_id</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;author_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_name</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;timeline_data_idx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeline_data_idx</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;hidden&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;readonly&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">timeline_data</span>
+
+<div class="viewcode-block" id="ScattDataForCefrScoring.convert_to_data_ver_0_5_for_cefr_scoring"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.ScattDataForCefrScoring.convert_to_data_ver_0_5_for_cefr_scoring">[ドキュメント]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">convert_to_data_ver_0_5_for_cefr_scoring</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tsv_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+        <span class="n">scatt_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">generate_default_data_ver_0_5</span><span class="p">(</span>
+            <span class="n">author_id</span><span class="p">,</span>
+            <span class="n">author_name</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">new_timeline_data_id_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">scatt_data</span><span class="p">[</span><span class="s1">&#39;timeline_data_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">current_target_timeline_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">tsv_string_io</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">tsv_string</span><span class="p">)</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">tsv_string_io</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">stripped_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stripped_line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">split_line</span> <span class="o">=</span> <span class="n">stripped_line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+                <span class="n">timeline_data_name</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">begin_time_sec</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="n">end_time_sec</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+                <span class="n">target_timeline_data</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">current_target_timeline_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">current_target_timeline_data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">timeline_data_name</span><span class="p">):</span>
+                    <span class="n">target_timeline_data</span> <span class="o">=</span> <span class="n">current_target_timeline_data</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">timeline_data</span> <span class="ow">in</span> <span class="n">scatt_data</span><span class="p">[</span><span class="s1">&#39;timeline_data_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">timeline_data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">timeline_data_name</span><span class="p">:</span>
+                            <span class="n">target_timeline_data</span> <span class="o">=</span> <span class="n">timeline_data</span>
+                            <span class="k">break</span>
+                    <span class="k">if</span> <span class="n">target_timeline_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">target_timeline_data_idx</span> <span class="o">=</span> <span class="n">new_timeline_data_id_number</span>
+                        <span class="n">target_timeline_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_generate_empty_label_timeline_data</span><span class="p">(</span>
+                            <span class="n">target_timeline_data_idx</span><span class="p">,</span>
+                            <span class="n">timeline_data_name</span><span class="p">,</span>
+                            <span class="n">author_id</span><span class="p">,</span>
+                            <span class="n">author_name</span><span class="p">,</span>
+                            <span class="n">created_at</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">new_timeline_data_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">new_timeline_data_id_number</span><span class="p">)</span>
+                        <span class="n">scatt_data</span><span class="p">[</span><span class="s1">&#39;timeline_data_set&#39;</span><span class="p">][</span><span class="n">new_timeline_data_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_timeline_data</span>
+                        <span class="n">new_timeline_data_id_number</span> <span class="o">=</span> <span class="n">new_timeline_data_id_number</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">new_timeline_segment_id_number</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_timeline_data</span><span class="p">[</span><span class="s1">&#39;segments&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="n">new_timeline_segment_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">new_timeline_segment_id_number</span><span class="p">)</span>
+                <span class="n">target_timeline_data</span><span class="p">[</span><span class="s1">&#39;segments&#39;</span><span class="p">][</span><span class="n">new_timeline_segment_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_generate_label_timeline_segment</span><span class="p">(</span><span class="n">begin_time_sec</span><span class="p">,</span> <span class="n">end_time_sec</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+                <span class="n">current_target_timeline_data</span> <span class="o">=</span> <span class="n">target_timeline_data</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">tsv_string_io</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">scatt_data</span></div></div>
+
+
+<div class="viewcode-block" id="generate_default_data_for_cefr_scoring"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.generate_default_data_for_cefr_scoring">[ドキュメント]</a><span class="k">def</span> <span class="nf">generate_default_data_for_cefr_scoring</span><span class="p">(</span>
+    <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">data_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LATEST_SCATT_DATA_VERSION</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">data_version</span> <span class="o">==</span> <span class="s1">&#39;0.5&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ScattDataForCefrScoring</span><span class="o">.</span><span class="n">generate_default_data_ver_0_5</span><span class="p">(</span>
+            <span class="n">author_id</span><span class="p">,</span>
+            <span class="n">author_name</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ScattDataUtilsError</span><span class="p">(</span><span class="s2">&quot;data version </span><span class="si">{0:s}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="convert_to_data_for_cefr_scoring_from_elan_tsv"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_data_utils.convert_to_data_for_cefr_scoring_from_elan_tsv">[ドキュメント]</a><span class="k">def</span> <span class="nf">convert_to_data_for_cefr_scoring_from_elan_tsv</span><span class="p">(</span>
+    <span class="n">tsv_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">data_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LATEST_SCATT_DATA_VERSION</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">data_version</span> <span class="o">==</span> <span class="s1">&#39;0.5&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ScattDataForCefrScoring</span><span class="o">.</span><span class="n">convert_to_data_ver_0_5_for_cefr_scoring</span><span class="p">(</span>
+            <span class="n">tsv_string</span><span class="p">,</span>
+            <span class="n">author_id</span><span class="p">,</span>
+            <span class="n">author_name</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ScattDataUtilsError</span><span class="p">(</span><span class="s2">&quot;data version </span><span class="si">{0:s}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Intelligent Framework Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

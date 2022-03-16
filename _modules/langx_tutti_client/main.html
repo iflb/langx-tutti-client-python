@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>langx_tutti_client.main &mdash; LangX Tutti Client  ドキュメント</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> LangX Tutti Client
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">リファレンス</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LangX Tutti Client</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">モジュールコード</a> &raquo;</li>
+      <li>langx_tutti_client.main</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>langx_tutti_client.main のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">from</span> <span class="nn">tutti_client</span> <span class="kn">import</span> <span class="n">TuttiClient</span>
+<span class="kn">from</span> <span class="nn">ducts_client</span> <span class="kn">import</span> <span class="n">Duct</span>
+<span class="kn">from</span> <span class="nn">.scatt_controller</span> <span class="kn">import</span> <span class="n">ScattController</span>
+<span class="kn">from</span> <span class="nn">.scatt_modules.scatt_video_utils</span> <span class="kn">import</span> <span class="n">ScattVideoUtilsError</span>
+<span class="kn">from</span> <span class="nn">.market_controller</span> <span class="kn">import</span> <span class="n">TuttiMarketController</span>
+
+<div class="viewcode-block" id="LangXTuttiClientConnectionError"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClientConnectionError">[ドキュメント]</a><span class="k">class</span> <span class="nc">LangXTuttiClientConnectionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">err</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource</span> <span class="o">=</span> <span class="n">resource</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">err</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClientEnvironmentError"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClientEnvironmentError">[ドキュメント]</a><span class="k">class</span> <span class="nc">LangXTuttiClientEnvironmentError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">err</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">err</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient">[ドキュメント]</a><span class="k">class</span> <span class="nc">LangXTuttiClient</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;LangXクライアントの各種機能を使うための窓口（Facade）となるクラスです。</span>
+
+<span class="sd">    このオブジェクトがメソッドとして直接管理する操作は以下の２つのみです。</span>
+<span class="sd">    </span>
+<span class="sd">    - :meth:`publish_scatt_tasks_to_market` ... アノテーション対象データをタスクにし、Tutti.marketへタスク発注する</span>
+<span class="sd">    - :meth:`watch_responses_for_scatt_tasks` ... タスクへの回答の取得およびプッシュ通知を受ける</span>
+
+<span class="sd">    これに加えて、Scatt、Tutti.works、Tutti.marketへの個別の操作が必要となる場合は、それぞれ :attr:`scatt` 、 :attr:`tutti` 、 :attr:`market` メンバーから各種メソッドにアクセス可能です。</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        scatt (ScattController): Scattリソースアクセス用オブジェクト</span>
+<span class="sd">        tutti (`tutti_client.TuttiClient (外部リンク)`_): Tutti.worksリソースアクセス用オブジェクト</span>
+<span class="sd">        market (TuttiMarketController): Tutti.marketリソースアクセス用オブジェクト</span>
+
+<span class="sd">    .. _tutti_client.TuttiClient (外部リンク):</span>
+<span class="sd">        https://iflb.github.io/tutti-client-python/references/facade.html</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scatt</span> <span class="o">=</span> <span class="n">ScattController</span><span class="p">(</span><span class="n">Duct</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span> <span class="o">=</span> <span class="n">TuttiClient</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">market</span> <span class="o">=</span> <span class="n">TuttiMarketController</span><span class="p">(</span><span class="n">Duct</span><span class="p">())</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ScattController</span><span class="o">.</span><span class="n">test_operating_condition</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">ScattVideoUtilsError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LangXTuttiClientEnvironmentError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+<div class="viewcode-block" id="LangXTuttiClient.open"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.open">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scatt_host</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">works_host</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">market_host</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Scatt、Tutti.works、Tutti.marketのサーバーへ接続します。</span>
+<span class="sd">        </span>
+<span class="sd">        LangXTuttiClientのメソッドを呼び出す前に必須の処理です。</span>
+<span class="sd">        内部的には、:meth:`open_scatt`、:meth:`open_tutti`、:meth:`open_market` を一度に実行します。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            scatt_host: Scattサーバーのホスト名</span>
+<span class="sd">            works_host: Tutti.worksサーバーのホスト名</span>
+<span class="sd">            market_host: Tutti.marketサーバーのホスト名</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">scatt_host</span><span class="p">:</span> <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_scatt</span><span class="p">(</span><span class="n">scatt_host</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">works_host</span><span class="p">:</span> <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_works</span><span class="p">(</span><span class="n">works_host</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">market_host</span><span class="p">:</span> <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_market</span><span class="p">(</span><span class="n">market_host</span><span class="p">))</span>
+
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.open_scatt"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.open_scatt">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">open_scatt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Scattサーバーへ接続します。</span>
+<span class="sd">        </span>
+<span class="sd">        LangXTuttiClientのメソッドを呼び出す前に必須の処理です。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host: Scattサーバーのホスト名</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">on_error</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+            <span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">host</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span> <span class="n">host</span> <span class="o">=</span> <span class="n">host</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scatt</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">connection_listener</span><span class="o">.</span><span class="n">onerror</span> <span class="o">=</span> <span class="n">on_error</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatt</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">host</span> <span class="o">+</span> <span class="s1">&#39;/ducts/wsd&#39;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LangXTuttiClientConnectionError</span><span class="p">(</span><span class="s1">&#39;scatt&#39;</span><span class="p">,</span> <span class="n">err</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.open_works"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.open_works">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">open_works</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.worksサーバーへ接続します。</span>
+<span class="sd">        </span>
+<span class="sd">        LangXTuttiClientのメソッドを呼び出す前に必須の処理です。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host: Tutti.worksサーバーのホスト名</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">on_error</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+            <span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">host</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span> <span class="n">host</span> <span class="o">=</span> <span class="n">host</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">connection_listener</span><span class="o">.</span><span class="n">onerror</span> <span class="o">=</span> <span class="n">on_error</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">host</span> <span class="o">+</span> <span class="s1">&#39;/ducts/wsd&#39;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LangXTuttiClientConnectionError</span><span class="p">(</span><span class="s1">&#39;Tutti.works&#39;</span><span class="p">,</span> <span class="n">err</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.open_market"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.open_market">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">open_market</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.marketサーバーへ接続します。</span>
+<span class="sd">        </span>
+<span class="sd">        LangXTuttiClientのメソッドを呼び出す前に必須の処理です。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host: Tutti.marketサーバーのホスト名</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">on_error</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+            <span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">host</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span> <span class="n">host</span> <span class="o">=</span> <span class="n">host</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">market</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">connection_listener</span><span class="o">.</span><span class="n">onerror</span> <span class="o">=</span> <span class="n">on_error</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">market</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">host</span> <span class="o">+</span> <span class="s1">&#39;/ducts/wsd&#39;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LangXTuttiClientConnectionError</span><span class="p">(</span><span class="s1">&#39;Tutti.market&#39;</span><span class="p">,</span> <span class="n">err</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.close"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.close">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Scatt、Tutti.works、Tutti.marketのサーバー接続を切断します。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close_scatt</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close_works</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close_market</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.close_scatt"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.close_scatt">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">close_scatt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Scattサーバーへの接続を切断します。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scatt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.close_works"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.close_works">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">close_works</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.worksサーバーへの接続を切断します。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.close_market"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.close_market">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">close_market</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.marketサーバーへの接続を切断します。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">market</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.sign_in"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.sign_in">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">works_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">market_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.worksおよびTutti.marketへサインインします。</span>
+
+<span class="sd">        内部的には、:meth:`sign_in_works` および:meth:`sign_in_market` を順に実行します。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            works_params: :meth:`sign_in_works` へ渡すキーワード引数をメンバーとして持つdict。</span>
+<span class="sd">            market_params: :meth:`sign_in_market` へ渡すキーワード引数をメンバーとして持つdict。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign_in_works</span><span class="p">(</span><span class="o">**</span><span class="n">works_params</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign_in_market</span><span class="p">(</span><span class="o">**</span><span class="n">market_params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.sign_in_market"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.sign_in_market">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_in_market</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">access_token_lifetime</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">7</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.marketへサインインします。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id: ユーザーID</span>
+<span class="sd">            password: パスワード</span>
+<span class="sd">            access_token_lifetime: アクセストークンの有効期限（ミリ秒）</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">market</span><span class="o">.</span><span class="n">sign_in</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">access_token_lifetime</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.sign_in_works"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.sign_in_works">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_in_works</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">password_hash</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">access_token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.worksへサインインします。</span>
+
+<span class="sd">        引数の渡し方は複数通り存在します。</span>
+
+<span class="sd">        1. ``access_token`` のみを指定する</span>
+<span class="sd">        2. ``user_name`` と ``password_hash`` を指定する</span>
+<span class="sd">        3. ``user_name`` と ``password`` （ ``kwargs`` として受け取られる）を指定する</span>
+
+<span class="sd">        ※ 1→2→3の順に優先されます。</span>
+<span class="sd">        :meth:`sign_in` においては3が適用されています。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_name: ユーザー名</span>
+<span class="sd">            password_hash: パスワードのハッシュ値（MD5）</span>
+<span class="sd">            access_token: アクセストークン</span>
+<span class="sd">            kwargs: ``password`` が指定可能です。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">sign_in</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span> <span class="n">password_hash</span><span class="p">,</span> <span class="n">access_token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.sign_out"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.sign_out">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_out</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.market、Tutti.worksからサインアウトします。</span>
+
+<span class="sd">        内部的には :meth:`sign_out_market` 、 :meth:`sign_out_works` が順に呼ばれます。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign_out_market</span><span class="p">()</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign_out_works</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.sign_out_market"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.sign_out_market">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_out_market</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.marketからサインアウトします。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">market</span><span class="o">.</span><span class="n">sign_out</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.sign_out_works"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.sign_out_works">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_out_works</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Tutti.worksからサインアウトします。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">sign_out</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LangXTuttiClient.publish_scatt_tasks_to_market"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.publish_scatt_tasks_to_market">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">publish_scatt_tasks_to_market</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">automation_parameter_set_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">student_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">video_file_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">elan_tsv_file_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">overwrite_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;アノテーション対象データをScattサーバーへ登録し、タスクをTutti.marketのJobとして発行します。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            automation_parameter_set_id: Tutti.worksにおいて発行されるAutomation Parameter Set ID (Automation ID)。</span>
+<span class="sd">            student_id: インタビュイーの生徒ID。任意の数列を文字列で指定可能（想定は先頭0埋め7桁）です。</span>
+<span class="sd">            video_id: 生徒IDに対するビデオID。任意の数列を文字列で指定可能（想定は先頭0埋め5桁）です。</span>
+<span class="sd">            video_file_path: ビデオファイル（mp4）のローカルパス。</span>
+<span class="sd">            elan_tsv_file_path: 音声認識結果や事前ラベル情報等を持ったファイル（TSV）のローカルパス。</span>
+<span class="sd">            overwrite_files: ``True`` の時、 ``student_id`` と ``video_id`` の組がすでに存在していてもファイルを上書きします。</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: 生成されたリソースのIDを返します。0番目はTutti.worksのNanotask Group ID、1番目はTutti.marketのJob IDです。</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ScattFileStorageError: ``student_id`` と ``video_id``の組がすでにScattサーバー上に登録済みで、``video_file_path`` が引数に指定されており、かつ ``overwrite_files=True`` の時。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="n">video_file_path</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatt</span><span class="o">.</span><span class="n">prepare_and_upload_files</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="n">video_id</span><span class="p">,</span> <span class="n">video_file_path</span><span class="p">,</span> <span class="n">elan_tsv_file_path</span><span class="p">,</span> <span class="n">overwrite_files</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">EVENT</span><span class="p">[</span><span class="s1">&#39;AUTOMATION_PARAMETER_SET_GET&#39;</span><span class="p">],</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;automation_parameter_set_id&#39;</span><span class="p">:</span> <span class="n">automation_parameter_set_id</span><span class="p">,</span>
+                    <span class="s1">&#39;access_token&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">account_info</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]:</span>
+            <span class="n">aps</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Automation parameter set ID &quot;</span><span class="si">{</span><span class="n">automation_parameter_set_id</span><span class="si">}</span><span class="s1">&quot; is not defined&#39;</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">EVENT</span><span class="p">[</span><span class="s1">&#39;PLATFORM_PARAMETER_SET_GET&#39;</span><span class="p">],</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;platform_parameter_set_id&#39;</span><span class="p">:</span> <span class="n">aps</span><span class="p">[</span><span class="s1">&#39;platform_parameter_set_id&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;access_token&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">account_info</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">pps</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Platform parameter set ID &quot;</span><span class="si">{}</span><span class="s1">}&quot; is not defined&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aps</span><span class="p">[</span><span class="s1">&#39;platform_parameter_set_id&#39;</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">pps</span><span class="p">[</span><span class="s1">&#39;platform&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;market&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Platform parameter set ID &quot;</span><span class="si">{}</span><span class="s1">&quot; is not set for market&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aps</span><span class="p">[</span><span class="s1">&#39;platform_parameter_set_id&#39;</span><span class="p">]))</span>
+
+        <span class="kn">import</span> <span class="nn">time</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+
+        <span class="n">nanotask</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">student_id</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">video_id</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;props&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;student_id&#39;</span><span class="p">:</span> <span class="n">student_id</span><span class="p">,</span>
+                <span class="s1">&#39;video_id&#39;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">create_nanotasks</span><span class="p">(</span>
+            <span class="n">project_name</span> <span class="o">=</span> <span class="n">aps</span><span class="p">[</span><span class="s1">&#39;project_name&#39;</span><span class="p">],</span>
+            <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;ScattApp&#39;</span><span class="p">,</span>
+            <span class="n">nanotasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">nanotask</span><span class="p">],</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">priority</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="n">num_assignable</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">nids</span> <span class="o">=</span> <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;nanotask_ids&#39;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Nanotask IDs:&#39;</span><span class="p">,</span> <span class="n">nids</span><span class="p">)</span>
+        <span class="n">ngid</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">create_nanotask_group</span><span class="p">(</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">student_id</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">video_id</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">nanotask_ids</span> <span class="o">=</span> <span class="n">nids</span><span class="p">,</span>
+            <span class="n">project_name</span> <span class="o">=</span> <span class="n">aps</span><span class="p">[</span><span class="s1">&#39;project_name&#39;</span><span class="p">],</span>
+            <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;ScattApp&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Nanotask Group ID:&#39;</span><span class="p">,</span> <span class="n">ngid</span><span class="p">)</span>
+
+        <span class="n">job_parameter</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;nanotask_group_ids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">ngid</span><span class="p">],</span>
+            <span class="s1">&#39;automation_parameter_set_id&#39;</span><span class="p">:</span> <span class="n">automation_parameter_set_id</span><span class="p">,</span>
+            <span class="s1">&#39;platform_parameter_set_id&#39;</span><span class="p">:</span> <span class="n">aps</span><span class="p">[</span><span class="s1">&#39;platform_parameter_set_id&#39;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">int_or_none</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">x</span><span class="o">!=</span><span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">market</span><span class="o">.</span><span class="n">register_job</span><span class="p">(</span>
+                    <span class="n">job_class_id</span> <span class="o">=</span> <span class="n">pps</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;job_class_id&#39;</span><span class="p">],</span>
+                    <span class="n">job_parameter</span> <span class="o">=</span> <span class="n">job_parameter</span><span class="p">,</span>
+                    <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Student ID: </span><span class="si">{</span><span class="n">student_id</span><span class="si">}</span><span class="s1"> / Video ID: </span><span class="si">{</span><span class="n">video_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">num_job_assignments_max</span> <span class="o">=</span> <span class="n">int_or_none</span><span class="p">(</span><span class="n">pps</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;num_job_assignments_max&#39;</span><span class="p">]),</span>
+                    <span class="n">priority_score</span> <span class="o">=</span> <span class="n">int_or_none</span><span class="p">(</span><span class="n">pps</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;priorityScore&#39;</span><span class="p">]),</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
+                <span class="n">jid</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Failed to create a job&#39;</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Job Class ID:&#39;</span><span class="p">,</span> <span class="n">pps</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;job_class_id&#39;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Job ID:&#39;</span><span class="p">,</span> <span class="n">jid</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">ngid</span><span class="p">,</span> <span class="n">jid</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">traceback</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LangXTuttiClient.watch_responses_for_scatt_tasks"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.watch_responses_for_scatt_tasks">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">watch_responses_for_scatt_tasks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">automation_parameter_set_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">last_watch_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;発注したScatt UIのJobにおいて、Tutti.worksに保存された回答をプッシュ通知で受け取ります。</span>
+
+<span class="sd">        また、このメソッドの実行時、 :attr:`last_watch_id` よりも後に収集された回答をサーバーから順番に返します。</span>
+<span class="sd">        これは例えば、前回 :meth:`watch_responses_for_scatt_tasks` を実行していたプロセスが終了してから、</span>
+<span class="sd">        次回再びプロセスを呼ぶまでの間に既に発行済みのJobにおいて新たな回答があった場合に、それらの回答を次回実行時に</span>
+<span class="sd">        まとめて取得するという目的で有効に用いることができます。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            automation_parameter_set_id: Tutti.worksで発行されたAutomation Parameter Set ID</span>
+<span class="sd">            handler: 回答を受信するたびに実行される（asyncコルーチン）関数。引数を１つとり、回答情報を受け取ります。</span>
+<span class="sd">                この引数はdict型で、 ``last_watch_id`` と ``data`` の２つのキーを持ちます。</span>
+<span class="sd">            last_watch_id: 過去に受け取った回答のWatch IDを指定すると、指定値よりも後のタイムスタンプに相当する</span>
+<span class="sd">                回答を全て返します。Watch IDの形式は ``&lt;ミリ秒タイムスタンプ&gt;-&lt;0始まり通し番号&gt;`` で、</span>
+<span class="sd">                Tutti.worksの内部データベースであるRedisの `Stream ID`_ に準拠します。したがって、この値に</span>
+<span class="sd">                ハイフン以降を除いた ``&lt;ミリ秒タイムスタンプ&gt;`` を渡した場合はその時間以降の全ての回答が返され、</span>
+<span class="sd">                またデフォルト値の ``+`` は正の方向の無限大値を指すため、メソッド実行時に過去の回答は返されません。</span>
+<span class="sd">                ``0`` を指定することで 履歴に存在する全ての回答を受け取ることが可能ですが、収集済み回答数が多く</span>
+<span class="sd">                なっている場合は受信データが膨大になる可能性があるため、非推奨です。</span>
+<span class="sd">        </span>
+<span class="sd">        .. _Stream ID:</span>
+<span class="sd">            https://redis.io/topics/streams-intro</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;watch_responses_for_automation_parameter_set&#39;</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">watch_responses_for_automation_parameter_set</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+            <span class="n">automation_parameter_set_id</span> <span class="o">=</span> <span class="n">automation_parameter_set_id</span><span class="p">,</span>
+            <span class="n">last_watch_id</span> <span class="o">=</span> <span class="n">last_watch_id</span><span class="p">,</span>
+            <span class="n">exclusive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Intelligent Framework Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

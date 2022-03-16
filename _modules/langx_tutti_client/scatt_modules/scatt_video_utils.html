@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>langx_tutti_client.scatt_modules.scatt_video_utils &mdash; LangX Tutti Client  ドキュメント</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="検索" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> LangX Tutti Client
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">リファレンス</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LangX Tutti Client</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">モジュールコード</a> &raquo;</li>
+      <li>langx_tutti_client.scatt_modules.scatt_video_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>langx_tutti_client.scatt_modules.scatt_video_utils のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">FFPROBE_COMMAND</span> <span class="o">=</span> <span class="s1">&#39;ffprobe&#39;</span>
+<span class="n">FFMPEG_COMMAND</span> <span class="o">=</span> <span class="s1">&#39;ffmpeg&#39;</span>
+<span class="n">SCATT_MODULES_DIR</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="n">FFMPEG_MD5_PATH</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SCATT_MODULES_DIR</span><span class="p">,</span> <span class="s1">&#39;.</span><span class="si">{0:s}</span><span class="s1">.md5&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">FFMPEG_COMMAND</span><span class="p">))</span>
+<span class="n">SUPPORTED_FILE_EXTENSIONS_LIST_PATH</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;.supported_video_file_extensions&#39;</span><span class="p">)</span>
+
+<span class="n">LINE_FEED_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">DEMUXER_FILE_EXTENSION_NAMES_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;Common extensions: (.+)\.$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ScattVideoUtilsError"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.ScattVideoUtilsError">[ドキュメント]</a><span class="k">class</span> <span class="nc">ScattVideoUtilsError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="get_waveform_digest_generator_path"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.get_waveform_digest_generator_path">[ドキュメント]</a><span class="k">def</span> <span class="nf">get_waveform_digest_generator_path</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">platform</span>
+    <span class="n">platform_system_name</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
+    <span class="n">platform_machine_name</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">machine</span><span class="p">()</span>
+    <span class="n">waveform_digest_generator_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">waveform_digest_generator_filename</span> <span class="o">=</span> <span class="s1">&#39;create_waveform_digest&#39;</span>
+    <span class="k">if</span> <span class="n">platform_system_name</span> <span class="o">==</span> <span class="s1">&#39;Darwin&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">platform_machine_name</span> <span class="o">==</span> <span class="s1">&#39;x86_64&#39;</span><span class="p">:</span>
+            <span class="n">waveform_digest_generator_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SCATT_MODULES_DIR</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;macosx_x86_64&#39;</span><span class="p">,</span> <span class="n">waveform_digest_generator_filename</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">platform_machine_name</span> <span class="o">==</span> <span class="s1">&#39;arm64&#39;</span><span class="p">:</span>
+            <span class="n">waveform_digest_generator_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SCATT_MODULES_DIR</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;macosx_arm64&#39;</span><span class="p">,</span> <span class="n">waveform_digest_generator_filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1">/</span><span class="si">{1:s}</span><span class="s1"> is unexpected platform.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">platform_system_name</span><span class="p">,</span> <span class="n">platform_machine_name</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">platform_system_name</span> <span class="o">==</span> <span class="s1">&#39;Linux&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">platform_machine_name</span> <span class="o">==</span> <span class="s1">&#39;x86_64&#39;</span><span class="p">:</span>
+            <span class="n">waveform_digest_generator_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SCATT_MODULES_DIR</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;linux_x86_64&#39;</span><span class="p">,</span> <span class="n">waveform_digest_generator_filename</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">platform_machine_name</span> <span class="o">==</span> <span class="s1">&#39;x86&#39;</span><span class="p">:</span>
+            <span class="n">waveform_digest_generator_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SCATT_MODULES_DIR</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;linux_x86&#39;</span><span class="p">,</span> <span class="n">waveform_digest_generator_filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1">/</span><span class="si">{1:s}</span><span class="s1"> is unexpected platform.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">platform_system_name</span><span class="p">,</span> <span class="n">platform_machine_name</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">platform_system_name</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">platform_machine_name</span> <span class="o">==</span> <span class="s1">&#39;x86_64&#39;</span><span class="p">:</span>
+            <span class="n">waveform_digest_generator_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SCATT_MODULES_DIR</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;windows_x86_64&#39;</span><span class="p">,</span> <span class="n">waveform_digest_generator_filename</span> <span class="o">+</span> <span class="s1">&#39;.exe&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">platform_machine_name</span> <span class="o">==</span> <span class="s1">&#39;x86&#39;</span><span class="p">:</span>
+            <span class="n">waveform_digest_generator_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SCATT_MODULES_DIR</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;windows_x86&#39;</span><span class="p">,</span> <span class="n">waveform_digest_generator_filename</span> <span class="o">+</span> <span class="s1">&#39;.exe&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1">/</span><span class="si">{1:s}</span><span class="s1"> is unexpected platform.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">platform_system_name</span><span class="p">,</span> <span class="n">platform_machine_name</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">waveform_digest_generator_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1"> is not found.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">waveform_digest_generator_path</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">waveform_digest_generator_path</span></div>
+
+
+<span class="k">def</span> <span class="nf">_generate_normalized_video_file_h264</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">FFMPEG_COMMAND</span><span class="p">,</span>
+        <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">input_video_file_path</span><span class="p">,</span>
+        <span class="s1">&#39;-ss&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-acodec&#39;</span><span class="p">,</span> <span class="s1">&#39;copy&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-fflags&#39;</span><span class="p">,</span> <span class="s1">&#39;+genpts&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-loglevel&#39;</span><span class="p">,</span> <span class="s1">&#39;level+error&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-y&#39;</span><span class="p">,</span>
+        <span class="n">output_video_file_path</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">process_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">process_result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;failed to normalize video file: </span><span class="se">\n</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error_message</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_get_start_frame_idx</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">FFPROBE_COMMAND</span><span class="p">,</span>
+        <span class="n">input_video_file_path</span><span class="p">,</span>
+        <span class="s1">&#39;-select_streams&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-show_entries&#39;</span><span class="p">,</span> <span class="s1">&#39;frame=coded_picture_number&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-print_format&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-read_intervals&#39;</span><span class="p">,</span> <span class="s1">&#39;%1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-loglevel&#39;</span><span class="p">,</span> <span class="s1">&#39;level+error&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">process_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">process_result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;failed to get start frame index: </span><span class="se">\n</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error_message</span><span class="p">))</span>
+
+    <span class="n">ffprobe_out</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">process_result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="n">coded_picture_numbers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;coded_picture_number&#39;</span><span class="p">]),</span> <span class="n">ffprobe_out</span><span class="p">[</span><span class="s1">&#39;frames&#39;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">coded_picture_numbers</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="get_start_offset_time"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.get_start_offset_time">[ドキュメント]</a><span class="k">def</span> <span class="nf">get_start_offset_time</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
+    <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">MINYEAR</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">FFPROBE_COMMAND</span><span class="p">,</span>
+        <span class="n">input_video_file_path</span><span class="p">,</span>
+        <span class="s1">&#39;-select_streams&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-show_entries&#39;</span><span class="p">,</span> <span class="s1">&#39;stream=r_frame_rate&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-print_format&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-loglevel&#39;</span><span class="p">,</span> <span class="s1">&#39;level+error&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">process_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">process_result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;failed to get frame rate: </span><span class="se">\n</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error_message</span><span class="p">))</span>
+
+    <span class="n">ffprobe_out</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">process_result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="n">frame_rate</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">ffprobe_out</span><span class="p">[</span><span class="s1">&#39;streams&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;r_frame_rate&#39;</span><span class="p">])</span>
+    <span class="n">start_frame_idx</span> <span class="o">=</span> <span class="n">_get_start_frame_idx</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">)</span>
+    <span class="n">start_offset_sec</span> <span class="o">=</span> <span class="n">start_frame_idx</span> <span class="o">/</span> <span class="n">frame_rate</span>
+    <span class="n">start_offset_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span>
+        <span class="n">MINYEAR</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">,</span>
+        <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">start_offset_sec</span> <span class="o">/</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)),</span>
+        <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">start_offset_sec</span> <span class="o">/</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">start_offset_sec</span> <span class="o">%</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">start_offset_sec</span> <span class="o">*</span> <span class="mi">1000000</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1000000</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">start_offset_time</span></div>
+
+
+<div class="viewcode-block" id="is_normalization_needed"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.is_normalization_needed">[ドキュメント]</a><span class="k">def</span> <span class="nf">is_normalization_needed</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">_get_start_frame_idx</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="generate_normalized_video_file"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.generate_normalized_video_file">[ドキュメント]</a><span class="k">def</span> <span class="nf">generate_normalized_video_file</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">FFPROBE_COMMAND</span><span class="p">,</span>
+        <span class="n">input_video_file_path</span><span class="p">,</span>
+        <span class="s1">&#39;-select_streams&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-show_entries&#39;</span><span class="p">,</span> <span class="s1">&#39;stream=codec_name,codec_type&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-print_format&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-loglevel&#39;</span><span class="p">,</span> <span class="s1">&#39;level+error&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">process_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">process_result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;failed to get video codec: </span><span class="se">\n</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error_message</span><span class="p">))</span>
+
+    <span class="n">ffprobe_out</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">process_result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="n">first_input_video_stream_info</span> <span class="o">=</span> <span class="n">ffprobe_out</span><span class="p">[</span><span class="s1">&#39;streams&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">first_input_video_stream_info</span><span class="p">[</span><span class="s1">&#39;codec_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;video&#39;</span><span class="p">:</span>
+        <span class="n">video_codec_name</span> <span class="o">=</span> <span class="n">first_input_video_stream_info</span><span class="p">[</span><span class="s1">&#39;codec_name&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">video_codec_name</span> <span class="o">==</span> <span class="s1">&#39;h264&#39;</span><span class="p">:</span>
+            <span class="n">_generate_normalized_video_file_h264</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">,</span> <span class="n">output_video_file_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1"> is unsupported video codec for normalizing video file.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">video_codec_name</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_supported_video_file_extensions"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.get_supported_video_file_extensions">[ドキュメント]</a><span class="k">def</span> <span class="nf">get_supported_video_file_extensions</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="kn">import</span> <span class="nn">shutil</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+    <span class="n">ffmpeg_path</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">FFMPEG_COMMAND</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ffmpeg_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">hashlib</span>
+        <span class="n">ffmpeg_md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+    
+    <span class="n">update_needed</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">FFMPEG_MD5_PATH</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">SUPPORTED_FILE_EXTENSIONS_LIST_PATH</span><span class="p">)):</span>
+        <span class="n">update_needed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">FFMPEG_MD5_PATH</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">existing_ffmpeg_md5</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">ffmpeg_md5</span> <span class="o">!=</span> <span class="n">existing_ffmpeg_md5</span><span class="p">:</span>
+                <span class="n">update_needed</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">update_needed</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">SUPPORTED_FILE_EXTENSIONS_LIST_PATH</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">FFMPEG_MD5_PATH</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">hashlib</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ffmpeg_md5</span><span class="p">)</span>
+
+        <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">FFMPEG_COMMAND</span><span class="p">,</span>
+            <span class="s1">&#39;-demuxers&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-loglevel&#39;</span><span class="p">,</span> <span class="s1">&#39;level+error&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">process_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">process_result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;failed to get file extensions: </span><span class="se">\n</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error_message</span><span class="p">))</span>
+
+        <span class="n">format_string</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">file_format_list_starts_at</span> <span class="o">=</span> <span class="n">format_string</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;File formats:&#39;</span><span class="p">)</span>
+        <span class="n">file_format_list_header_ends_at</span> <span class="o">=</span> <span class="n">format_string</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39; --&#39;</span><span class="p">,</span> <span class="n">file_format_list_starts_at</span><span class="p">)</span>
+        <span class="n">file_format_list_body_starts_at</span> <span class="o">=</span> <span class="n">LINE_FEED_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">format_string</span><span class="p">,</span> <span class="n">file_format_list_header_ends_at</span><span class="p">)</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+        <span class="n">file_format_list_body_string_io</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">format_string</span><span class="p">[</span><span class="n">file_format_list_body_starts_at</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">supported_video_file_extensions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">file_format_list_body_string_io</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">demuxer_name</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">FFMPEG_COMMAND</span><span class="p">,</span>
+                <span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;demuxer=</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">demuxer_name</span><span class="p">),</span>
+                <span class="s1">&#39;-loglevel&#39;</span><span class="p">,</span> <span class="s1">&#39;level+error&#39;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">process_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">process_result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;failed to get video file extension: </span><span class="se">\n</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error_message</span><span class="p">))</span>
+
+            <span class="n">demuxer_help_string</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="n">file_extension_names_match_result</span> <span class="o">=</span> <span class="n">DEMUXER_FILE_EXTENSION_NAMES_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">demuxer_help_string</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">file_extension_names_match_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">file_extension_names</span> <span class="o">=</span> <span class="n">file_extension_names_match_result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">file_extension_name</span> <span class="ow">in</span> <span class="n">file_extension_names</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">file_extension_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_video_file_extensions</span><span class="p">:</span>
+                        <span class="n">supported_video_file_extensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_extension_name</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">file_format_list_body_string_io</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">SUPPORTED_FILE_EXTENSIONS_LIST_PATH</span><span class="p">,</span> <span class="s1">&#39;wt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">supported_video_file_extension</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">supported_video_file_extensions</span><span class="p">):</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">supported_video_file_extension</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">supported_video_file_extensions</span></div>
+
+
+<div class="viewcode-block" id="test_operating_condition"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.test_operating_condition">[ドキュメント]</a><span class="k">def</span> <span class="nf">test_operating_condition</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">shutil</span>
+    <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">FFMPEG_COMMAND</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1"> is not found. make sure that PATH is set correctly.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">FFMPEG_COMMAND</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">FFPROBE_COMMAND</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1"> is not found. make sure that PATH is set correctly.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">FFPROBE_COMMAND</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="generate_waveform_digest_file_from_video_file"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.generate_waveform_digest_file_from_video_file">[ドキュメント]</a><span class="k">def</span> <span class="nf">generate_waveform_digest_file_from_video_file</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+
+    <span class="n">supported_video_file_extensions</span> <span class="o">=</span> <span class="n">get_supported_video_file_extensions</span><span class="p">()</span>
+    <span class="n">split_result</span> <span class="o">=</span> <span class="n">input_video_file_path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1"> has no file extension.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">))</span>
+
+    <span class="n">input_video_file_base_path</span><span class="p">,</span> <span class="n">input_video_file_extension</span> <span class="o">=</span> <span class="n">split_result</span>
+    <span class="k">if</span> <span class="n">input_video_file_extension</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_video_file_extensions</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:s}</span><span class="s1"> is not supported.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_video_file_extension</span><span class="p">))</span>
+
+    <span class="n">output_wav_file_path</span> <span class="o">=</span> <span class="n">input_video_file_base_path</span> <span class="o">+</span> <span class="s1">&#39;.wav&#39;</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">FFMPEG_COMMAND</span><span class="p">,</span>
+        <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">input_video_file_path</span><span class="p">,</span>
+        <span class="s1">&#39;-loglevel&#39;</span><span class="p">,</span> <span class="s1">&#39;level+error&#39;</span><span class="p">,</span>
+        <span class="n">output_wav_file_path</span><span class="p">,</span>
+        <span class="s1">&#39;-y&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">process_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">process_result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;failed to generate waveform digest: </span><span class="se">\n</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error_message</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">generate_waveform_digest_file</span><span class="p">(</span><span class="n">output_wav_file_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="generate_waveform_digest_file"><a class="viewcode-back" href="../../../langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_video_utils.generate_waveform_digest_file">[ドキュメント]</a><span class="k">def</span> <span class="nf">generate_waveform_digest_file</span><span class="p">(</span><span class="n">input_wav_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="n">waveform_digest_generator_path</span> <span class="o">=</span> <span class="n">get_waveform_digest_generator_path</span><span class="p">()</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">waveform_digest_generator_path</span><span class="p">,</span>
+        <span class="n">input_wav_file_path</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">process_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">process_result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ScattVideoUtilsError</span><span class="p">(</span><span class="s1">&#39;failed to generate waveform digest: </span><span class="se">\n</span><span class="si">{0:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error_message</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">process_result</span><span class="o">.</span><span class="n">stdout</span></div>
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Intelligent Framework Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

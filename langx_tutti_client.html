@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>langx_tutti_client.main module &mdash; LangX Tutti Client  ドキュメント</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="prev" title="リファレンス" href="reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> LangX Tutti Client
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="reference.html">リファレンス</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">langx_tutti_client.main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-langx_tutti_client.market_controller">langx_tutti_client.market_controller module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-langx_tutti_client.scatt_controller">langx_tutti_client.scatt_controller module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LangX Tutti Client</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="reference.html">リファレンス</a> &raquo;</li>
+      <li>langx_tutti_client.main module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/langx_tutti_client.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-langx_tutti_client.main">
+<span id="langx-tutti-client-main-module"></span><h1>langx_tutti_client.main module<a class="headerlink" href="#module-langx_tutti_client.main" title="このヘッドラインへのパーマリンク"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">langx_tutti_client.main.</span></span><span class="sig-name descname"><span class="pre">LangXTuttiClient</span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient" title="この定義へのパーマリンク"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>LangXクライアントの各種機能を使うための窓口（Facade）となるクラスです。</p>
+<p>このオブジェクトがメソッドとして直接管理する操作は以下の２つのみです。</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.publish_scatt_tasks_to_market" title="langx_tutti_client.main.LangXTuttiClient.publish_scatt_tasks_to_market"><code class="xref py py-meth docutils literal notranslate"><span class="pre">publish_scatt_tasks_to_market()</span></code></a> ... アノテーション対象データをタスクにし、Tutti.marketへタスク発注する</p></li>
+<li><p><a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.watch_responses_for_scatt_tasks" title="langx_tutti_client.main.LangXTuttiClient.watch_responses_for_scatt_tasks"><code class="xref py py-meth docutils literal notranslate"><span class="pre">watch_responses_for_scatt_tasks()</span></code></a> ... タスクへの回答の取得およびプッシュ通知を受ける</p></li>
+</ul>
+<p>これに加えて、Scatt、Tutti.works、Tutti.marketへの個別の操作が必要となる場合は、それぞれ <a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.scatt" title="langx_tutti_client.main.LangXTuttiClient.scatt"><code class="xref py py-attr docutils literal notranslate"><span class="pre">scatt</span></code></a> 、 <a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.tutti" title="langx_tutti_client.main.LangXTuttiClient.tutti"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tutti</span></code></a> 、 <a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.market" title="langx_tutti_client.main.LangXTuttiClient.market"><code class="xref py py-attr docutils literal notranslate"><span class="pre">market</span></code></a> メンバーから各種メソッドにアクセス可能です。</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.scatt">
+<span class="sig-name descname"><span class="pre">scatt</span></span><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.scatt" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Scattリソースアクセス用オブジェクト</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#langx_tutti_client.scatt_controller.ScattController" title="langx_tutti_client.scatt_controller.ScattController">ScattController</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.tutti">
+<span class="sig-name descname"><span class="pre">tutti</span></span><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.tutti" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.worksリソースアクセス用オブジェクト</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://iflb.github.io/tutti-client-python/references/facade.html">tutti_client.TuttiClient (外部リンク)</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.market">
+<span class="sig-name descname"><span class="pre">market</span></span><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.market" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.marketリソースアクセス用オブジェクト</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#langx_tutti_client.market_controller.TuttiMarketController" title="langx_tutti_client.market_controller.TuttiMarketController">TuttiMarketController</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.close"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.close" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Scatt、Tutti.works、Tutti.marketのサーバー接続を切断します。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.close_market">
+<span class="sig-name descname"><span class="pre">close_market</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.close_market"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.close_market" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.marketサーバーへの接続を切断します。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.close_scatt">
+<span class="sig-name descname"><span class="pre">close_scatt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.close_scatt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.close_scatt" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Scattサーバーへの接続を切断します。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.close_works">
+<span class="sig-name descname"><span class="pre">close_works</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.close_works"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.close_works" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.worksサーバーへの接続を切断します。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.open">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scatt_host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">works_host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">market_host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.open"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.open" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Scatt、Tutti.works、Tutti.marketのサーバーへ接続します。</p>
+<p>LangXTuttiClientのメソッドを呼び出す前に必須の処理です。
+内部的には、<a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.open_scatt" title="langx_tutti_client.main.LangXTuttiClient.open_scatt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">open_scatt()</span></code></a>、<code class="xref py py-meth docutils literal notranslate"><span class="pre">open_tutti()</span></code>、<a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.open_market" title="langx_tutti_client.main.LangXTuttiClient.open_market"><code class="xref py py-meth docutils literal notranslate"><span class="pre">open_market()</span></code></a> を一度に実行します。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scatt_host</strong> -- Scattサーバーのホスト名</p></li>
+<li><p><strong>works_host</strong> -- Tutti.worksサーバーのホスト名</p></li>
+<li><p><strong>market_host</strong> -- Tutti.marketサーバーのホスト名</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.open_market">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open_market</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.open_market"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.open_market" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.marketサーバーへ接続します。</p>
+<p>LangXTuttiClientのメソッドを呼び出す前に必須の処理です。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>host</strong> -- Tutti.marketサーバーのホスト名</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.open_scatt">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open_scatt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.open_scatt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.open_scatt" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Scattサーバーへ接続します。</p>
+<p>LangXTuttiClientのメソッドを呼び出す前に必須の処理です。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>host</strong> -- Scattサーバーのホスト名</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.open_works">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open_works</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.open_works"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.open_works" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.worksサーバーへ接続します。</p>
+<p>LangXTuttiClientのメソッドを呼び出す前に必須の処理です。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>host</strong> -- Tutti.worksサーバーのホスト名</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.publish_scatt_tasks_to_market">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">publish_scatt_tasks_to_market</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">automation_parameter_set_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">student_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elan_tsv_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.publish_scatt_tasks_to_market"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.publish_scatt_tasks_to_market" title="この定義へのパーマリンク"></a></dt>
+<dd><p>アノテーション対象データをScattサーバーへ登録し、タスクをTutti.marketのJobとして発行します。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>automation_parameter_set_id</strong> -- Tutti.worksにおいて発行されるAutomation Parameter Set ID (Automation ID)。</p></li>
+<li><p><strong>student_id</strong> -- インタビュイーの生徒ID。任意の数列を文字列で指定可能（想定は先頭0埋め7桁）です。</p></li>
+<li><p><strong>video_id</strong> -- 生徒IDに対するビデオID。任意の数列を文字列で指定可能（想定は先頭0埋め5桁）です。</p></li>
+<li><p><strong>video_file_path</strong> -- ビデオファイル（mp4）のローカルパス。</p></li>
+<li><p><strong>elan_tsv_file_path</strong> -- 音声認識結果や事前ラベル情報等を持ったファイル（TSV）のローカルパス。</p></li>
+<li><p><strong>overwrite_files</strong> -- <code class="docutils literal notranslate"><span class="pre">True</span></code> の時、 <code class="docutils literal notranslate"><span class="pre">student_id</span></code> と <code class="docutils literal notranslate"><span class="pre">video_id</span></code> の組がすでに存在していてもファイルを上書きします。</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>生成されたリソースのIDを返します。0番目はTutti.worksのNanotask Group ID、1番目はTutti.marketのJob IDです。</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+<dt class="field-even">例外</dt>
+<dd class="field-even"><p><a class="reference internal" href="langx_tutti_client.scatt_modules.html#langx_tutti_client.scatt_modules.scatt_file_storage.ScattFileStorageError" title="langx_tutti_client.scatt_modules.scatt_file_storage.ScattFileStorageError"><strong>ScattFileStorageError</strong></a> -- <code class="docutils literal notranslate"><span class="pre">student_id</span></code> と <code class="docutils literal notranslate"><span class="pre">video_id``の組がすでにScattサーバー上に登録済みで、``video_file_path</span></code> が引数に指定されており、かつ <code class="docutils literal notranslate"><span class="pre">overwrite_files=True</span></code> の時。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.sign_in">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">works_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">market_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.sign_in"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.sign_in" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.worksおよびTutti.marketへサインインします。</p>
+<p>内部的には、<a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.sign_in_works" title="langx_tutti_client.main.LangXTuttiClient.sign_in_works"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_in_works()</span></code></a> および:meth:<cite>sign_in_market</cite> を順に実行します。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>works_params</strong> -- <a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.sign_in_works" title="langx_tutti_client.main.LangXTuttiClient.sign_in_works"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_in_works()</span></code></a> へ渡すキーワード引数をメンバーとして持つdict。</p></li>
+<li><p><strong>market_params</strong> -- <a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.sign_in_market" title="langx_tutti_client.main.LangXTuttiClient.sign_in_market"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_in_market()</span></code></a> へ渡すキーワード引数をメンバーとして持つdict。</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.sign_in_market">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign_in_market</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_token_lifetime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">604800000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.sign_in_market"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.sign_in_market" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.marketへサインインします。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> -- ユーザーID</p></li>
+<li><p><strong>password</strong> -- パスワード</p></li>
+<li><p><strong>access_token_lifetime</strong> -- アクセストークンの有効期限（ミリ秒）</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.sign_in_works">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign_in_works</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.sign_in_works"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.sign_in_works" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.worksへサインインします。</p>
+<p>引数の渡し方は複数通り存在します。</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">access_token</span></code> のみを指定する</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_name</span></code> と <code class="docutils literal notranslate"><span class="pre">password_hash</span></code> を指定する</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_name</span></code> と <code class="docutils literal notranslate"><span class="pre">password</span></code> （ <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> として受け取られる）を指定する</p></li>
+</ol>
+<p>※ 1→2→3の順に優先されます。
+<a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.sign_in" title="langx_tutti_client.main.LangXTuttiClient.sign_in"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_in()</span></code></a> においては3が適用されています。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_name</strong> -- ユーザー名</p></li>
+<li><p><strong>password_hash</strong> -- パスワードのハッシュ値（MD5）</p></li>
+<li><p><strong>access_token</strong> -- アクセストークン</p></li>
+<li><p><strong>kwargs</strong> -- <code class="docutils literal notranslate"><span class="pre">password</span></code> が指定可能です。</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.sign_out">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign_out</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.sign_out"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.sign_out" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.market、Tutti.worksからサインアウトします。</p>
+<p>内部的には <a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.sign_out_market" title="langx_tutti_client.main.LangXTuttiClient.sign_out_market"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_out_market()</span></code></a> 、 <a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.sign_out_works" title="langx_tutti_client.main.LangXTuttiClient.sign_out_works"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_out_works()</span></code></a> が順に呼ばれます。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.sign_out_market">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign_out_market</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.sign_out_market"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.sign_out_market" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.marketからサインアウトします。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.sign_out_works">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign_out_works</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.sign_out_works"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.sign_out_works" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.worksからサインアウトします。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClient.watch_responses_for_scatt_tasks">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">watch_responses_for_scatt_tasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">automation_parameter_set_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_watch_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'+'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClient.watch_responses_for_scatt_tasks"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClient.watch_responses_for_scatt_tasks" title="この定義へのパーマリンク"></a></dt>
+<dd><p>発注したScatt UIのJobにおいて、Tutti.worksに保存された回答をプッシュ通知で受け取ります。</p>
+<p>また、このメソッドの実行時、 <code class="xref py py-attr docutils literal notranslate"><span class="pre">last_watch_id</span></code> よりも後に収集された回答をサーバーから順番に返します。
+これは例えば、前回 <a class="reference internal" href="#langx_tutti_client.main.LangXTuttiClient.watch_responses_for_scatt_tasks" title="langx_tutti_client.main.LangXTuttiClient.watch_responses_for_scatt_tasks"><code class="xref py py-meth docutils literal notranslate"><span class="pre">watch_responses_for_scatt_tasks()</span></code></a> を実行していたプロセスが終了してから、
+次回再びプロセスを呼ぶまでの間に既に発行済みのJobにおいて新たな回答があった場合に、それらの回答を次回実行時に
+まとめて取得するという目的で有効に用いることができます。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>automation_parameter_set_id</strong> -- Tutti.worksで発行されたAutomation Parameter Set ID</p></li>
+<li><p><strong>handler</strong> -- 回答を受信するたびに実行される（asyncコルーチン）関数。引数を１つとり、回答情報を受け取ります。
+この引数はdict型で、 <code class="docutils literal notranslate"><span class="pre">last_watch_id</span></code> と <code class="docutils literal notranslate"><span class="pre">data</span></code> の２つのキーを持ちます。</p></li>
+<li><p><strong>last_watch_id</strong> -- 過去に受け取った回答のWatch IDを指定すると、指定値よりも後のタイムスタンプに相当する
+回答を全て返します。Watch IDの形式は <code class="docutils literal notranslate"><span class="pre">&lt;ミリ秒タイムスタンプ&gt;-&lt;0始まり通し番号&gt;</span></code> で、
+Tutti.worksの内部データベースであるRedisの <a class="reference external" href="https://redis.io/topics/streams-intro">Stream ID</a> に準拠します。したがって、この値に
+ハイフン以降を除いた <code class="docutils literal notranslate"><span class="pre">&lt;ミリ秒タイムスタンプ&gt;</span></code> を渡した場合はその時間以降の全ての回答が返され、
+またデフォルト値の <code class="docutils literal notranslate"><span class="pre">+</span></code> は正の方向の無限大値を指すため、メソッド実行時に過去の回答は返されません。
+<code class="docutils literal notranslate"><span class="pre">0</span></code> を指定することで 履歴に存在する全ての回答を受け取ることが可能ですが、収集済み回答数が多く
+なっている場合は受信データが膨大になる可能性があるため、非推奨です。</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClientConnectionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">langx_tutti_client.main.</span></span><span class="sig-name descname"><span class="pre">LangXTuttiClientConnectionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resource</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClientConnectionError"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClientConnectionError" title="この定義へのパーマリンク"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="langx_tutti_client.main.LangXTuttiClientEnvironmentError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">langx_tutti_client.main.</span></span><span class="sig-name descname"><span class="pre">LangXTuttiClientEnvironmentError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">err</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/main.html#LangXTuttiClientEnvironmentError"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.main.LangXTuttiClientEnvironmentError" title="この定義へのパーマリンク"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-langx_tutti_client.market_controller">
+<span id="langx-tutti-client-market-controller-module"></span><h1>langx_tutti_client.market_controller module<a class="headerlink" href="#module-langx_tutti_client.market_controller" title="このヘッドラインへのパーマリンク"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="langx_tutti_client.market_controller.TuttiMarketController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">langx_tutti_client.market_controller.</span></span><span class="sig-name descname"><span class="pre">TuttiMarketController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/market_controller.html#TuttiMarketController"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.market_controller.TuttiMarketController" title="この定義へのパーマリンク"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tutti.marketに関連する操作を行うオブジェクトです。</p>
+<p>現状、必要最低限のメソッド群のみを定義しています。JavaScriptにおいて既に <a class="reference external" href="https://github.com/iflb/tutti-market/blob/a4b6b9054183f761a1692ff9633a84e80d93ea3c/frontend/src/scripts/ducts.js#L142">こちら</a> に定義された
+操作のうち、このクラスに実装が必要なものは別途問い合わせてください。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.market_controller.TuttiMarketController.open">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wsd_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/market_controller.html#TuttiMarketController.open"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.market_controller.TuttiMarketController.open" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.marketサーバーへ接続します。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>wsd_url</strong> -- DUCTSサーバーへ接続するエンドポイント</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.market_controller.TuttiMarketController.register_job">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_class_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_job_assignments_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority_score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/market_controller.html#TuttiMarketController.register_job"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.market_controller.TuttiMarketController.register_job" title="この定義へのパーマリンク"></a></dt>
+<dd><p>ジョブを発注します。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>job_class_id</strong> -- ジョブクラスID</p></li>
+<li><p><strong>job_parameter</strong> -- 発注するジョブへ与えるパラメータ群</p></li>
+<li><p><strong>description</strong> -- ジョブの説明文（リクエスタから見えるメモ用）</p></li>
+<li><p><strong>num_job_assignments_max</strong> -- 収集する回答数上限</p></li>
+<li><p><strong>priority_score</strong> -- 優先度。値が小さいほど優先度が高く、優先的にワーカーへ割り当てられます。</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.market_controller.TuttiMarketController.sign_in">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_token_lifetime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/market_controller.html#TuttiMarketController.sign_in"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.market_controller.TuttiMarketController.sign_in" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.marketにサインインします。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.market_controller.TuttiMarketController.sign_out">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign_out</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/market_controller.html#TuttiMarketController.sign_out"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.market_controller.TuttiMarketController.sign_out" title="この定義へのパーマリンク"></a></dt>
+<dd><p>Tutti.marketからサインアウトします。</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-langx_tutti_client.scatt_controller">
+<span id="langx-tutti-client-scatt-controller-module"></span><h1>langx_tutti_client.scatt_controller module<a class="headerlink" href="#module-langx_tutti_client.scatt_controller" title="このヘッドラインへのパーマリンク"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">langx_tutti_client.scatt_controller.</span></span><span class="sig-name descname"><span class="pre">ScattController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController" title="この定義へのパーマリンク"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_to_data_for_cefr_scoring_from_elan_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tsv_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'langx_tutti_client'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'LangX</span> <span class="pre">Tutti</span> <span class="pre">Client'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.generate_default_data_for_cefr_scoring">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_default_data_for_cefr_scoring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">author_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'langx_tutti_client'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'LangX</span> <span class="pre">Tutti</span> <span class="pre">Client'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.generate_default_data_for_cefr_scoring"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.generate_default_data_for_cefr_scoring" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.generate_normalized_video_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_normalized_video_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.generate_normalized_video_file"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.generate_normalized_video_file" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.generate_waveform_digest_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_waveform_digest_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_wav_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.generate_waveform_digest_file"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.generate_waveform_digest_file" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.generate_waveform_digest_file_from_video_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_waveform_digest_file_from_video_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_video_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.generate_waveform_digest_file_from_video_file"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.generate_waveform_digest_file_from_video_file" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.get_start_offset_time">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_start_offset_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">datetime.datetime</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.get_start_offset_time"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.get_start_offset_time" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.get_supported_video_file_extensions">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_supported_video_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.get_supported_video_file_extensions"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.get_supported_video_file_extensions" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.get_uploaded_resource_info">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_uploaded_resource_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.get_uploaded_resource_info"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.get_uploaded_resource_info" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.is_normalization_needed">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_normalization_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.is_normalization_needed"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.is_normalization_needed" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.normalize_video_offset">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_video_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.normalize_video_offset"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.normalize_video_offset" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.open">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wsd_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.open"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.open" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.prepare_and_upload_files">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare_and_upload_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">student_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elan_tsv_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.prepare_and_upload_files"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.prepare_and_upload_files" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.show_resource_tree">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">show_resource_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resource_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.show_resource_tree"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.show_resource_tree" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.test_operating_condition">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_operating_condition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.test_operating_condition"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.test_operating_condition" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="langx_tutti_client.scatt_controller.ScattController.upload_scatt_resources_to_server">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_scatt_resources_to_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">student_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatt_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waveform_digest_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/langx_tutti_client/scatt_controller.html#ScattController.upload_scatt_resources_to_server"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#langx_tutti_client.scatt_controller.ScattController.upload_scatt_resources_to_server" title="この定義へのパーマリンク"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reference.html" class="btn btn-neutral float-left" title="リファレンス" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Intelligent Framework Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
