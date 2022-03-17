@@ -58,7 +58,7 @@ async def main():
                         video_id = video_id,
                         video_file_path = video_file_path,
                         elan_tsv_file_path = elan_tsv_file_path,
-                        overwrite_files = False,
+                        overwrite = False,
                     )
 
         elif mode == 'watch_response':

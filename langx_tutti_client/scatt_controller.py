@@ -118,7 +118,7 @@ class ScattController:
         video_id: str,
         video_file_path: str,
         elan_tsv_file_path: str = None,
-        overwrite_files: bool = False,
+        overwrite: bool = False,
     ) -> None:
 
         video_file_path = ScattController.normalize_video_offset(video_file_path)
@@ -141,7 +141,7 @@ class ScattController:
             video_file_path,
             scatt_data,
             waveform_digest_data,
-            overwrite_files,
+            overwrite,
         )
 
     async def get_uploaded_resource_info(self) -> dict:
