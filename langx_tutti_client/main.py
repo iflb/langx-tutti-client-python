@@ -145,7 +145,7 @@ class LangXTuttiClient:
     async def sign_in(self, works_params: dict, market_params: dict) -> None:
         '''Tutti.worksおよびTutti.marketへサインインします。
 
-        内部的には、:meth:`sign_in_works` および:meth:`sign_in_market` を順に実行します。
+        内部的には、:meth:`sign_in_works` および :meth:`sign_in_market` を順に実行します。
 
         Args:
             works_params: :meth:`sign_in_works` へ渡すキーワード引数をメンバーとして持つdict。
