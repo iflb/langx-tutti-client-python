@@ -72,10 +72,19 @@
 <span class="n">DEFAULT_AUTHOR_NAME</span> <span class="o">=</span> <span class="s1">&#39;LangX Tutti Client&#39;</span>
 
 <div class="viewcode-block" id="ScattController"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController">[ドキュメント]</a><span class="k">class</span> <span class="nc">ScattController</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;Scattを利用する際に必要となるデータの生成、変換、リソースサーバーへのアップロードなどの処理を行うクラスです。</span>
+
+<span class="sd">    Scattリソースサーバーへの接続を必要としない処理は、ScattControllerインスタンスを必要としないため静的関数として実装されています。</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duct</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span> <span class="o">=</span> <span class="n">duct</span>
 
 <div class="viewcode-block" id="ScattController.open"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.open">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wsd_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Scattリソースサーバーへの接続を行います。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            wsd_url: ScattリソースサーバーのWSDのURL</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">wsd_url</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScattController.generate_default_data_for_cefr_scoring"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.generate_default_data_for_cefr_scoring">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
@@ -83,6 +92,12 @@
         <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_AUTHOR_ID</span><span class="p">,</span>
         <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_AUTHOR_NAME</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;CEFRスコアリングタスク向けのデフォルトのScattデータをオンメモリで作成します。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            author_id: Scattデータに埋め込まれる、データ作成者のID(Scattが識別子として利用します)</span>
+<span class="sd">            author_name: Scattデータに埋め込まれる、データ作成者の名前</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">scatt_data</span> <span class="o">=</span> <span class="n">scatt_data_utils</span><span class="o">.</span><span class="n">generate_default_data_for_cefr_scoring</span><span class="p">(</span>
             <span class="n">author_id</span><span class="p">,</span>
             <span class="n">author_name</span><span class="p">,</span>
@@ -96,6 +111,14 @@
         <span class="n">author_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_AUTHOR_ID</span><span class="p">,</span>
         <span class="n">author_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_AUTHOR_NAME</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;予めELANを用いて作成したアノテーションデータをTSV形式でエクスポートしたデータをもとに、</span>
+<span class="sd">        CEFRスコアリングタスク向けのScattデータをオンメモリで作成します。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tsv_string: TSV形式でエクスポートされたELANのアノテーションデータの文字列</span>
+<span class="sd">            author_id: Scattデータに埋め込まれる、データ作成者のID(Scattが識別子として利用します)</span>
+<span class="sd">            author_name: Scattデータに埋め込まれる、データ作成者の名前</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">scatt_data</span> <span class="o">=</span> <span class="n">scatt_data_utils</span><span class="o">.</span><span class="n">convert_to_data_for_cefr_scoring_from_elan_tsv</span><span class="p">(</span>
             <span class="n">tsv_string</span><span class="p">,</span>
             <span class="n">author_id</span><span class="p">,</span>
@@ -106,10 +129,26 @@
 
 <div class="viewcode-block" id="ScattController.get_start_offset_time"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.get_start_offset_time">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_start_offset_time</span><span class="p">(</span><span class="n">input_video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;入力された動画ファイルの開始フレームに設定された時刻のオフセットを ``datetime`` 型の値として取得します。</span>
+
+<span class="sd">        この値が0以外の場合、Scattに読み込まれた動画の音声と映像の再生開始時刻がずれる可能性があります(ブラウザ依存)。</span>
+<span class="sd">        なお、この関数は内部的に ``ffprobe`` コマンドを実行するため、コマンドへのパスを設定する必要があります。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_video_path: 入力動画ファイルのパス</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">get_start_offset_time</span><span class="p">(</span><span class="n">input_video_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScattController.is_normalization_needed"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.is_normalization_needed">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_normalization_needed</span><span class="p">(</span><span class="n">input_video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;入力された動画ファイルをScattに読み込んだ場合、動画の音声と映像の再生時刻がずれる可能性があるかどうかを取得します。</span>
+
+<span class="sd">        取得した値がFalseであっても、本ライブラリが想定していない特殊なデータ形式の場合ずれる可能性があることに留意してください。</span>
+<span class="sd">        なお、この関数は内部的に ``ffprobe`` コマンドを実行するため、コマンドへのパスを設定する必要があります。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_video_path: 入力動画ファイルのパス</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">is_normalization_needed</span><span class="p">(</span><span class="n">input_video_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScattController.generate_normalized_video_file"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.generate_normalized_video_file">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
@@ -117,6 +156,15 @@
         <span class="n">input_video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">output_video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;入力された動画ファイルの開始フレームの時刻オフセットを0に補正して、新しい動画ファイルとして出力します。</span>
+
+<span class="sd">        なお、この関数は内部的に ``ffmpeg`` および ``ffprobe`` コマンドを実行するため、コマンドへのパスを設定する必要があります。</span>
+<span class="sd">        また、現時点では入力された動画ファイルの動画ストリームのコーデックはH264のみをサポートしています。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_video_path: 入力動画ファイルのパス</span>
+<span class="sd">            output_video_path: 出力動画ファイルのパス</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">generate_normalized_video_file</span><span class="p">(</span>
             <span class="n">input_video_path</span><span class="p">,</span>
             <span class="n">output_video_path</span><span class="p">,</span>
@@ -124,18 +172,45 @@
 
 <div class="viewcode-block" id="ScattController.get_supported_video_file_extensions"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.get_supported_video_file_extensions">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_supported_video_file_extensions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;実行環境にインストールされた ``ffmpeg`` のヘルプから ``ffmpeg`` で読み込み可能なファイルの拡張子を取得し、文字列の配列として返します。</span>
+
+<span class="sd">        ``ffmpeg`` コマンドへのパスを設定する必要があります。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">get_supported_video_file_extensions</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ScattController.test_operating_condition"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.test_operating_condition">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">test_operating_condition</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;本モジュールの動作要件を満たしているか検査します。</span>
+
+<span class="sd">        満たしていない場合、例外が発生します。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">test_operating_condition</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ScattController.generate_waveform_digest_file"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.generate_waveform_digest_file">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">generate_waveform_digest_file</span><span class="p">(</span><span class="n">input_wav_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;入力された音声ファイルからScattタイムラインの背景に表示する波形のダイジェストデータをオンメモリで生成します。</span>
+
+<span class="sd">        なお、この関数は内部的に ``ffmpeg`` コマンドを実行するため、コマンドへのパスを設定する必要があります。</span>
+<span class="sd">        また、実行環境向けにビルドされた波形ダイジェストデータ生成ツールが、本ライブラリに同梱されていない場合、例外が発生します。</span>
+<span class="sd">        新規にビルドが必要なため、お手数ですが開発者までご連絡ください。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_wav_file_path: 入力音声ファイルのパス</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">generate_waveform_digest_file</span><span class="p">(</span><span class="n">input_wav_file_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScattController.generate_waveform_digest_file_from_video_file"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.generate_waveform_digest_file_from_video_file">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">generate_waveform_digest_file_from_video_file</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;入力されたビデオファイルから音声ストリームを抽出し、</span>
+<span class="sd">        Scattタイムラインの背景に表示する波形のダイジェストデータをオンメモリで生成します。</span>
+
+<span class="sd">        なお、この関数は内部的に ``ffmpeg`` コマンドを実行するため、コマンドへのパスを設定する必要があります。</span>
+<span class="sd">        また、実行環境向けにビルドされた波形ダイジェストデータ生成ツールが、本ライブラリに同梱されていない場合、例外が発生します。</span>
+<span class="sd">        新規にビルドが必要なため、お手数ですが開発者までご連絡ください。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_video_path: 入力動画ファイルのパス</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">scatt_video_utils</span><span class="o">.</span><span class="n">generate_waveform_digest_file_from_video_file</span><span class="p">(</span><span class="n">input_video_file_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScattController.normalize_video_offset"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.normalize_video_offset">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
@@ -153,7 +228,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;skipping video normalization&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">video_file_path</span></div>
-        
+
 <div class="viewcode-block" id="ScattController.upload_scatt_resources_to_server"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.upload_scatt_resources_to_server">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upload_scatt_resources_to_server</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">student_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -163,6 +238,16 @@
         <span class="n">waveform_digest_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
         <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Scattリソース(動画ファイル、Scattデータ、音声波形ダイジェストデータ)をサーバーにアップロードします。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            student_id: 学生ID(Scattリソースを一意に特定するために利用されます)</span>
+<span class="sd">            video_id: 動画ID(Scattリソースを一意に特定するために利用されます)</span>
+<span class="sd">            video_file_path: 動画ファイルのパス</span>
+<span class="sd">            scatt_data: Scattデータ(JSON文字列)</span>
+<span class="sd">            waveform_digest_data: 音声波形ダイジェストデータ</span>
+<span class="sd">            overwrite: 同じIDのリソースが存在する場合に上書きするかどうか</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
         <span class="n">video_file_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -184,8 +269,27 @@
         <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">video_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">elan_tsv_file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">overwrite_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;入力された動画ファイルから音声波形ダイジェストデータを、</span>
+<span class="sd">        ELANを用いて作成されたアノテーションデータをTSV形式でエクスポートしたファイルからScattデータを生成し、</span>
+<span class="sd">        それらをScattリソースサーバーにアップロードします。</span>
+
+<span class="sd">        このクラスに実装された関数を組み合わせてバッチ的に複合的な処理を行う関数であるため、</span>
+<span class="sd">        用途に合わない場合はこの関数を利用せず、個別の関数をご利用ください。</span>
+<span class="sd">        なお、これらの複合的な処理のうち、いくつかの処理は内部的に ``ffmpeg`` コマンドを実行するため、コマンドへのパスを設定する必要があります。</span>
+<span class="sd">        また、入力された動画ファイルをScattに読み込むと動画の音声と映像の再生時刻がずれる可能性がある場合、</span>
+<span class="sd">        開始フレームの時刻オフセットを0に補正した新しい動画ファイルの生成を試みますが、</span>
+<span class="sd">        現時点では、入力された動画ファイルの動画ストリームのコーデックがH264でない場合、この処理は失敗します。</span>
+<span class="sd">        そのため、動画の音声と映像の再生時刻がずれる可能性のあるH264コーデックの動画ファイルを入力しないようにしてください。</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            student_id: 学生ID(Scattリソースを一意に特定するために利用されます)</span>
+<span class="sd">            video_id: 動画ID(Scattリソースを一意に特定するために利用されます)</span>
+<span class="sd">            video_file_path: 動画ファイルのパス</span>
+<span class="sd">            elan_tsv_file_path: ELANを用いて作成されたアノテーションデータをTSV形式でエクスポートしたファイルのパス</span>
+<span class="sd">            overwrite: 同じIDのリソースが存在する場合に上書きするかどうか</span>
+<span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="n">video_file_path</span> <span class="o">=</span> <span class="n">ScattController</span><span class="o">.</span><span class="n">normalize_video_offset</span><span class="p">(</span><span class="n">video_file_path</span><span class="p">)</span>
 
@@ -207,14 +311,18 @@
             <span class="n">video_file_path</span><span class="p">,</span>
             <span class="n">scatt_data</span><span class="p">,</span>
             <span class="n">waveform_digest_data</span><span class="p">,</span>
-            <span class="n">overwrite_files</span><span class="p">,</span>
+            <span class="n">overwrite</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScattController.get_uploaded_resource_info"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.get_uploaded_resource_info">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_uploaded_resource_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;アップロード済みのScattリソース情報を取得します。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">scatt_file_storage</span><span class="o">.</span><span class="n">get_uploaded_resource_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duct</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScattController.show_resource_tree"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.scatt_controller.ScattController.show_resource_tree">[ドキュメント]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">show_resource_tree</span><span class="p">(</span><span class="n">resource_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Scattリソース情報からディレクトリツリーを構築し、標準出力します。</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">scatt_file_storage</span><span class="o">.</span><span class="n">show_resource_tree</span><span class="p">(</span><span class="n">resource_info</span><span class="p">)</span></div></div>
 </pre></div>
 

@@ -211,7 +211,7 @@
 <div class="viewcode-block" id="LangXTuttiClient.sign_in"><a class="viewcode-back" href="../../langx_tutti_client.html#langx_tutti_client.main.LangXTuttiClient.sign_in">[ドキュメント]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">works_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">market_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&#39;&#39;&#39;Tutti.worksおよびTutti.marketへサインインします。</span>
 
-<span class="sd">        内部的には、:meth:`sign_in_works` および:meth:`sign_in_market` を順に実行します。</span>
+<span class="sd">        内部的には、:meth:`sign_in_works` および :meth:`sign_in_market` を順に実行します。</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            works_params: :meth:`sign_in_works` へ渡すキーワード引数をメンバーとして持つdict。</span>
@@ -276,7 +276,7 @@
         <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">video_file_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">elan_tsv_file_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">overwrite_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&#39;&#39;&#39;アノテーション対象データをScattサーバーへ登録し、タスクをTutti.marketのJobとして発行します。</span>
 
@@ -286,17 +286,17 @@
 <span class="sd">            video_id: 生徒IDに対するビデオID。任意の数列を文字列で指定可能（想定は先頭0埋め5桁）です。</span>
 <span class="sd">            video_file_path: ビデオファイル（mp4）のローカルパス。</span>
 <span class="sd">            elan_tsv_file_path: 音声認識結果や事前ラベル情報等を持ったファイル（TSV）のローカルパス。</span>
-<span class="sd">            overwrite_files: ``True`` の時、 ``student_id`` と ``video_id`` の組がすでに存在していてもファイルを上書きします。</span>
+<span class="sd">            overwrite: ``True`` の時、 ``student_id`` と ``video_id`` の組がすでに存在していてもファイルを上書きします。</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            tuple: 生成されたリソースのIDを返します。0番目はTutti.worksのNanotask Group ID、1番目はTutti.marketのJob IDです。</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ScattFileStorageError: ``student_id`` と ``video_id``の組がすでにScattサーバー上に登録済みで、``video_file_path`` が引数に指定されており、かつ ``overwrite_files=True`` の時。</span>
+<span class="sd">            ScattFileStorageError: ``student_id`` と ``video_id`` の組がすでにScattサーバー上に登録済みで、``video_file_path`` が引数に指定されており、かつ ``overwrite=True`` の時。</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="k">if</span> <span class="n">video_file_path</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatt</span><span class="o">.</span><span class="n">prepare_and_upload_files</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="n">video_id</span><span class="p">,</span> <span class="n">video_file_path</span><span class="p">,</span> <span class="n">elan_tsv_file_path</span><span class="p">,</span> <span class="n">overwrite_files</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatt</span><span class="o">.</span><span class="n">prepare_and_upload_files</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="n">video_id</span><span class="p">,</span> <span class="n">video_file_path</span><span class="p">,</span> <span class="n">elan_tsv_file_path</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tutti</span><span class="o">.</span><span class="n">_duct</span><span class="o">.</span><span class="n">EVENT</span><span class="p">[</span><span class="s1">&#39;AUTOMATION_PARAMETER_SET_GET&#39;</span><span class="p">],</span>
