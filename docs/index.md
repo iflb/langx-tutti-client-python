@@ -11,7 +11,7 @@ LangXにおけるScattタスク発注・回答収集用クライアントAPIで�
 ## インストール
 
 ```
-pip install langx_tutti_client
+pip install git+https://github.com/iflb/langx-tutti-client-python
 ```
 
 ## 目次
