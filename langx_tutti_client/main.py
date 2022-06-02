@@ -230,7 +230,7 @@ class LangXTuttiClient:
         '''
 
         if video_file_path:
-            await self.scatt.prepare_and_upload_files(student_id, video_id, video_file_path, elan_tsv_file_path, overwrite)
+            await self.scatt.prepare_and_upload_files_v2(student_id, video_id, video_file_path, elan_tsv_file_path, overwrite)
 
         data = await self.tutti._duct.call(
                 self.tutti._duct.EVENT['AUTOMATION_PARAMETER_SET_GET'],

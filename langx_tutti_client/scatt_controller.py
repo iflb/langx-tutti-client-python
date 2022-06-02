@@ -1,6 +1,7 @@
 from .scatt_modules import scatt_data_utils, scatt_video_utils, scatt_file_storage
 from datetime import datetime, timezone
 import json
+import warnings
 
 DEFAULT_AUTHOR_ID = 'langx_tutti_client'
 DEFAULT_AUTHOR_NAME = 'LangX Tutti Client'
@@ -26,12 +27,9 @@ class ScattController:
         author_id: str = DEFAULT_AUTHOR_ID,
         author_name: str = DEFAULT_AUTHOR_NAME,
     ) -> str:
-        '''CEFRスコアリングタスク向けのデフォルトのScattデータをオンメモリで作成します。
-
-        Args:
-            author_id: Scattデータに埋め込まれる、データ作成者のID(Scattが識別子として利用します)
-            author_name: Scattデータに埋め込まれる、データ作成者の名前
+        '''【非推奨関数】generate_empty_data をご利用ください。
         '''
+        warnings.warn('`generate_default_data_for_cefr_scoring` is deprecated.')
         scatt_data = scatt_data_utils.generate_default_data_for_cefr_scoring(
             author_id,
             author_name,
@@ -40,7 +38,31 @@ class ScattController:
         return json.dumps(scatt_data)
 
     @staticmethod
+    def generate_empty_data() -> str:
+        '''空のScattデータをオンメモリで作成します。
+        '''
+        scatt_data = scatt_data_utils.generate_empty_data()
+        return json.dumps(scatt_data)
+
+    @staticmethod
     def convert_to_data_for_cefr_scoring_from_elan_tsv(
+        tsv_string: str,
+        author_id: str = DEFAULT_AUTHOR_ID,
+        author_name: str = DEFAULT_AUTHOR_NAME,
+    ) -> str:
+        '''【非推奨関数】convert_to_data_for_cefr_scoring_from_elan_tsv_v2 をご利用ください。
+        '''
+        warnings.warn('`convert_to_data_for_cefr_scoring_from_elan_tsv` is deprecated.')
+        scatt_data = scatt_data_utils.convert_to_data_for_cefr_scoring_from_elan_tsv(
+            tsv_string,
+            author_id,
+            author_name,
+            datetime.now(timezone.utc)
+        )
+        return json.dumps(scatt_data)
+
+    @staticmethod
+    def convert_to_data_for_cefr_scoring_from_elan_tsv_v2(
         tsv_string: str,
         author_id: str = DEFAULT_AUTHOR_ID,
         author_name: str = DEFAULT_AUTHOR_NAME,
@@ -53,7 +75,8 @@ class ScattController:
             author_id: Scattデータに埋め込まれる、データ作成者のID(Scattが識別子として利用します)
             author_name: Scattデータに埋め込まれる、データ作成者の名前
         '''
-        scatt_data = scatt_data_utils.convert_to_data_for_cefr_scoring_from_elan_tsv(
+        warnings.warn('`convert_to_data_for_cefr_scoring_from_elan_tsv` is deprecated.')
+        scatt_data = scatt_data_utils.convert_to_data_for_cefr_scoring_from_elan_tsv_v2(
             tsv_string,
             author_id,
             author_name,
@@ -205,6 +228,40 @@ class ScattController:
         elan_tsv_file_path: str = None,
         overwrite: bool = False,
     ) -> None:
+        '''【非推奨関数】prepare_and_upload_files_v2 をご利用ください。
+        '''
+        warnings.warn('`prepare_and_upload_files` is deprecated.')
+        video_file_path = ScattController.normalize_video_offset(video_file_path)
+
+        print('>>> generating waveform digest...')
+        waveform_digest_data = ScattController.generate_waveform_digest_file_from_video_file(video_file_path)
+        print('<<< generating waveform digest completed.')
+
+        print('>>> generating Scatt data...')
+        if elan_tsv_file_path is None:
+            scatt_data = ScattController.generate_default_data_for_cefr_scoring()
+        else:
+            with open(elan_tsv_file_path, 'rt') as file:
+                scatt_data = ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv(file.read())
+        print('<<< generating Scatt data completed.')
+
+        await self.upload_scatt_resources_to_server(
+            student_id,
+            video_id,
+            video_file_path,
+            scatt_data,
+            waveform_digest_data,
+            overwrite,
+        )
+
+    async def prepare_and_upload_files_v2(
+        self,
+        student_id: str,
+        video_id: str,
+        video_file_path: str,
+        elan_tsv_file_path: str = None,
+        overwrite: bool = False,
+    ) -> None:
         '''入力された動画ファイルから音声波形ダイジェストデータを、
         ELANを用いて作成されたアノテーションデータをTSV形式でエクスポートしたファイルからScattデータを生成し、
         それらをScattリソースサーバーにアップロードします。
@@ -224,7 +281,7 @@ class ScattController:
             elan_tsv_file_path: ELANを用いて作成されたアノテーションデータをTSV形式でエクスポートしたファイルのパス
             overwrite: 同じIDのリソースが存在する場合に上書きするかどうか
         '''
-
+        warnings.warn('`prepare_and_upload_files` is deprecated.')
         video_file_path = ScattController.normalize_video_offset(video_file_path)
 
         print('>>> generating waveform digest...')
@@ -233,10 +290,10 @@ class ScattController:
 
         print('>>> generating Scatt data...')
         if elan_tsv_file_path is None:
-            scatt_data = ScattController.generate_default_data_for_cefr_scoring()
+            scatt_data = ScattController.generate_empty_data()
         else:
             with open(elan_tsv_file_path, 'rt') as file:
-                scatt_data = ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv(file.read())
+                scatt_data = ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv_v2(file.read())
         print('<<< generating Scatt data completed.')
 
         await self.upload_scatt_resources_to_server(
