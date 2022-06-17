@@ -209,7 +209,7 @@ class LangXTuttiClient:
         student_id: str,
         video_id: str,
         video_file_path: Optional[str] = None,
-        elan_tsv_file_path: Optional[str] = None,
+        csv_file_path: Optional[str] = None,
         overwrite: bool = False,
     ) -> Tuple[str, str]:
         '''アノテーション対象データをScattサーバーへ登録し、タスクをTutti.marketのJobとして発行します。
@@ -219,7 +219,7 @@ class LangXTuttiClient:
             student_id: インタビュイーの生徒ID。任意の数列を文字列で指定可能（想定は先頭0埋め7桁）です。
             video_id: 生徒IDに対するビデオID。任意の数列を文字列で指定可能（想定は先頭0埋め5桁）です。
             video_file_path: ビデオファイル（mp4）のローカルパス。
-            elan_tsv_file_path: 音声認識結果や事前ラベル情報等を持ったファイル（TSV）のローカルパス。
+            csv_file_path: 音声認識結果や事前ラベル情報等を持ったファイル（CSV）のローカルパス。
             overwrite: ``True`` の時、 ``student_id`` と ``video_id`` の組がすでに存在していてもファイルを上書きします。
 
         Returns:
@@ -230,7 +230,7 @@ class LangXTuttiClient:
         '''
 
         if video_file_path:
-            await self.scatt.prepare_and_upload_files_v2(student_id, video_id, video_file_path, elan_tsv_file_path, overwrite)
+            await self.scatt.prepare_and_upload_files_with_csv(student_id, video_id, video_file_path, csv_file_path, overwrite)
 
         data = await self.tutti._duct.call(
                 self.tutti._duct.EVENT['AUTOMATION_PARAMETER_SET_GET'],
