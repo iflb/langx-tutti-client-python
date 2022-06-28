@@ -28,17 +28,17 @@ async def main():
         await client.open(
                 scatt_host='https://teai.scatt.io',
                 works_host='https://teai.tutti.works',
-                market_host='https://teai.tutti.market'
+                market_host='https://teai202206.tutti.market'
             )
         await client.sign_in(
-                works_params={ 'user_name': 'admin', 'password': 'admin' },
-                market_params={ 'user_id': 'susumu', 'password': 'susumu' }
+                works_params={ 'user_name': 'requester', 'password': 'requester' },
+                market_params={ 'user_id': 'requester', 'password': 'requester' }
             )
 
         if mode == 'publish':
             automation_parameter_set_id = sys.argv[2]
             if len(sys.argv) < 5:
-                print('Usage:  python example.py publish <automation_parameter_set_id> <student_id> <video_id> <video_file_path> <elan_tsv_file_path>')
+                print('Usage:  python example.py publish <automation_parameter_set_id> <student_id> <video_id> <video_file_path> <csv_file_path>')
                 print('')
             else:
                 student_id = sys.argv[3]
@@ -48,16 +48,16 @@ async def main():
                 except:
                     video_file_path = None
                 try:
-                    elan_tsv_file_path = sys.argv[6]
+                    csv_file_path = sys.argv[6]
                 except:
-                    elan_tsv_file_path = None
+                    csv_file_path = None
 
                 ngid, jid = await client.publish_scatt_tasks_to_market(
                         automation_parameter_set_id,
                         student_id = student_id,
                         video_id = video_id,
                         video_file_path = video_file_path,
-                        elan_tsv_file_path = elan_tsv_file_path,
+                        csv_file_path = csv_file_path,
                         overwrite = False,
                     )
 

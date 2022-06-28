@@ -127,7 +127,10 @@ def get_start_offset_time(input_video_file_path: str) -> None:
 
 
 def is_normalization_needed(input_video_file_path: str) -> bool:
-    return (_get_start_frame_idx(input_video_file_path) != 0)
+    try:
+        return (_get_start_frame_idx(input_video_file_path) != 0)
+    except:
+        return False
 
 
 def generate_normalized_video_file(input_video_file_path: str, output_video_file_path: str) -> None:
