@@ -47,11 +47,11 @@ class ScattDataForCefrScoring():
         return timeline_segment_data
 
     @classmethod
-    def _generate_label_timeline_segment(cls, begin_time_sec: float, end_time_sec: float, label: str, topic: str = '') -> dict:
+    def _generate_label_timeline_segment(cls, begin_time_msec: float, end_time_msec: float, label: str, topic: str = '') -> dict:
         import math
         timeline_segment = dict()
-        timeline_segment['begin'] = math.floor(begin_time_sec * 1000)
-        timeline_segment['end'] = math.floor(end_time_sec * 1000)
+        timeline_segment['begin'] = math.floor(begin_time_msec)
+        timeline_segment['end'] = math.floor(end_time_msec)
         timeline_segment['locked'] = False
         timeline_segment['data'] = cls._generate_label_timeline_segment_data(label, topic)
         return timeline_segment
@@ -88,8 +88,8 @@ class ScattDataForCefrScoring():
             if len(stripped_line) > 0:
                 split_line = stripped_line.strip().split('\t', 9)
                 timeline_data_name = split_line[0]
-                begin_time_sec = float(split_line[3])
-                end_time_sec = float(split_line[5])
+                begin_time_msec = float(split_line[3]) * 1000
+                end_time_msec = float(split_line[5]) * 1000
                 label = split_line[8]
                 target_timeline_data = None
                 if (current_target_timeline_data is not None) and (current_target_timeline_data['name'] == timeline_data_name):
@@ -113,7 +113,7 @@ class ScattDataForCefrScoring():
                         new_timeline_data_id_number = new_timeline_data_id_number + 1
                 new_timeline_segment_id_number = len(target_timeline_data['segments'].keys())
                 new_timeline_segment_id = str(new_timeline_segment_id_number)
-                target_timeline_data['segments'][new_timeline_segment_id] = cls._generate_label_timeline_segment(begin_time_sec, end_time_sec, label)
+                target_timeline_data['segments'][new_timeline_segment_id] = cls._generate_label_timeline_segment(begin_time_msec, end_time_msec, label)
                 current_target_timeline_data = target_timeline_data
             line = tsv_string_io.readline()
         return scatt_data
@@ -132,11 +132,10 @@ class ScattDataForCefrScoring():
         reader = csv.reader(csv_string_io)
         next(reader)
         for line in reader:
-            print(line)
             timeline_data_name = line[0]
             label = line[1]
-            begin_time_sec = float(line[2])
-            end_time_sec = float(line[3])
+            begin_time_msec = float(line[2])
+            end_time_msec = float(line[3])
             topic = line[4]
             target_timeline_data = None
             if (current_target_timeline_data is not None) and (current_target_timeline_data['name'] == timeline_data_name):
@@ -160,7 +159,7 @@ class ScattDataForCefrScoring():
                     new_timeline_data_id_number = new_timeline_data_id_number + 1
             new_timeline_segment_id_number = len(target_timeline_data['segments'].keys())
             new_timeline_segment_id = str(new_timeline_segment_id_number)
-            target_timeline_data['segments'][new_timeline_segment_id] = cls._generate_label_timeline_segment(begin_time_sec, end_time_sec, label, topic)
+            target_timeline_data['segments'][new_timeline_segment_id] = cls._generate_label_timeline_segment(begin_time_msec, end_time_msec, label, topic)
             current_target_timeline_data = target_timeline_data
         return scatt_data
 
