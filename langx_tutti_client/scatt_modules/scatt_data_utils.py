@@ -60,7 +60,7 @@ class ScattDataForCefrScoring():
     def _generate_empty_label_timeline_data(cls, timeline_data_idx: int, timeline_data_name: str, author_id: str, author_name: str, created_at: datetime) -> dict:
         timeline_data = dict()
         timeline_data['name'] = timeline_data_name
-        timeline_data['segment_data_type'] = 'LabelSegmentData'
+        timeline_data['segment_data_type'] = 'LabelForCefrSegmentData'
         timeline_data['segments'] = dict()
         timeline_data['created_at'] = created_at.isoformat()
         timeline_data['modified_at'] = created_at.isoformat()
