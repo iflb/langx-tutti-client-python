@@ -206,8 +206,7 @@ class LangXTuttiClient:
     async def publish_scatt_tasks_to_market(
         self,
         automation_parameter_set_id: str,
-        student_id: str,
-        video_id: str,
+        resource_id: str,
         video_file_path: Optional[str] = None,
         csv_file_path: Optional[str] = None,
         overwrite: bool = False,
@@ -216,21 +215,20 @@ class LangXTuttiClient:
 
         Args:
             automation_parameter_set_id: Tutti.worksにおいて発行されるAutomation Parameter Set ID (Automation ID)。
-            student_id: インタビュイーの生徒ID。任意の数列を文字列で指定可能（想定は先頭0埋め7桁）です。
-            video_id: 生徒IDに対するビデオID。任意の数列を文字列で指定可能（想定は先頭0埋め5桁）です。
+            resource_id: ScattリソースID(Scattに読み込まれるリソースを特定するためのID)です。
             video_file_path: ビデオファイル（mp4）のローカルパス。
             csv_file_path: 音声認識結果や事前ラベル情報等を持ったファイル（CSV）のローカルパス。
-            overwrite: ``True`` の時、 ``student_id`` と ``video_id`` の組がすでに存在していてもファイルを上書きします。
+            overwrite: ``True`` の時、 ``resource_id`` に対応するScattリソースがすでに存在していてもファイルを上書きします。
 
         Returns:
             tuple: 生成されたリソースのIDを返します。0番目はTutti.worksのNanotask Group ID、1番目はTutti.marketのJob IDです。
 
         Raises:
-            ScattFileStorageError: ``student_id`` と ``video_id`` の組がすでにScattサーバー上に登録済みで、``video_file_path`` が引数に指定されており、かつ ``overwrite=True`` の時。
+            ScattFileStorageError: ``resource_id`` がすでにScattサーバー上に登録済みで、``video_file_path`` が引数に指定されており、かつ ``overwrite=True`` の時。
         '''
 
         if video_file_path:
-            await self.scatt.prepare_and_upload_files_with_csv(student_id, video_id, video_file_path, csv_file_path, overwrite)
+            await self.scatt.prepare_and_upload_files_with_csv(resource_id, video_file_path, csv_file_path, overwrite)
 
         data = await self.tutti._duct.call(
                 self.tutti._duct.EVENT['AUTOMATION_PARAMETER_SET_GET'],
@@ -263,10 +261,9 @@ class LangXTuttiClient:
         time = int(time.time())
 
         nanotask = {
-            'id': f'{student_id}-{video_id}-{time}',
+            'id': f'{resource_id}-{time}',
             'props': {
-                'student_id': student_id,
-                'video_id': video_id,
+                'resource_id': resource_id,
             }
         }
 
@@ -281,7 +278,7 @@ class LangXTuttiClient:
         nids = ret['nanotask_ids']
         print('Nanotask IDs:', nids)
         ngid = await self.tutti.resource.create_nanotask_group(
-            name = f'{student_id}-{video_id}-{time}',
+            name = f'{resource_id}-{time}',
             nanotask_ids = nids,
             project_name = aps['project_name'],
             template_name = 'ScattApp',
@@ -299,7 +296,7 @@ class LangXTuttiClient:
             res = await self.market.register_job(
                     job_class_id = pps['parameters']['job_class_id'],
                     job_parameter = job_parameter,
-                    description = f'Student ID: {student_id} / Video ID: {video_id}',
+                    description = f'Resource ID: {resource_id}',
                     num_job_assignments_max = int_or_none(pps['parameters']['num_job_assignments_max']),
                     priority_score = int_or_none(pps['parameters']['priorityScore']),
                 )

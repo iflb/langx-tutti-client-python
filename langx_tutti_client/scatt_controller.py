@@ -176,8 +176,7 @@ class ScattController:
 
     async def upload_scatt_resources_to_server(
         self,
-        student_id: str,
-        video_id: str,
+        resource_id: str,
         video_file_path: str,
         scatt_data: str,
         waveform_digest_data: bytes,
@@ -186,22 +185,18 @@ class ScattController:
         '''Scattリソース(動画ファイル、Scattデータ、音声波形ダイジェストデータ)をサーバーにアップロードします。
 
         Args:
-            student_id: 学生ID(Scattリソースを一意に特定するために利用されます)
-            video_id: 動画ID(Scattリソースを一意に特定するために利用されます)
+            resource_id: Scatt リソース ID
             video_file_path: 動画ファイルのパス
             scatt_data: Scattデータ(JSON文字列)
             waveform_digest_data: 音声波形ダイジェストデータ
             overwrite: 同じIDのリソースが存在する場合に上書きするかどうか
         '''
         from os import path
-        video_file_name = path.basename(video_file_path)
         with open(video_file_path, 'rb') as file:
             video_data = file.read()
             await scatt_file_storage.upload_resources(
                 self._duct,
-                student_id,
-                video_id,
-                video_file_name,
+                resource_id,
                 video_data,
                 scatt_data,
                 waveform_digest_data,
@@ -210,8 +205,7 @@ class ScattController:
 
     async def prepare_and_upload_files(
         self,
-        student_id: str,
-        video_id: str,
+        resource_id: str,
         video_file_path: str,
         elan_tsv_file_path: str = None,
         overwrite: bool = False,
@@ -229,8 +223,7 @@ class ScattController:
         そのため、動画の音声と映像の再生時刻がずれる可能性のあるH264コーデックの動画ファイルを入力しないようにしてください。
 
         Args:
-            student_id: 学生ID(Scattリソースを一意に特定するために利用されます)
-            video_id: 動画ID(Scattリソースを一意に特定するために利用されます)
+            resource_id: Scatt リソース ID
             video_file_path: 動画ファイルのパス
             elan_tsv_file_path: ELANを用いて作成されたアノテーションデータをTSV形式でエクスポートしたファイルのパス
             overwrite: 同じIDのリソースが存在する場合に上書きするかどうか
@@ -250,8 +243,7 @@ class ScattController:
         print('<<< generating Scatt data completed.')
 
         await self.upload_scatt_resources_to_server(
-            student_id,
-            video_id,
+            resource_id,
             video_file_path,
             scatt_data,
             waveform_digest_data,
@@ -260,8 +252,7 @@ class ScattController:
 
     async def prepare_and_upload_files_with_csv(
         self,
-        student_id: str,
-        video_id: str,
+        resource_id: str,
         video_file_path: str,
         csv_file_path: str = None,
         overwrite: bool = False,
@@ -279,8 +270,7 @@ class ScattController:
         そのため、動画の音声と映像の再生時刻がずれる可能性のあるH264コーデックの動画ファイルを入力しないようにしてください。
 
         Args:
-            student_id: 学生ID(Scattリソースを一意に特定するために利用されます)
-            video_id: 動画ID(Scattリソースを一意に特定するために利用されます)
+            resource_id: Scatt リソース ID
             video_file_path: 動画ファイルのパス
             csv_file_path: CSV形式のアノテーションデータファイルのパス
             overwrite: 同じIDのリソースが存在する場合に上書きするかどうか
@@ -300,8 +290,7 @@ class ScattController:
         print('<<< generating Scatt data completed.')
 
         await self.upload_scatt_resources_to_server(
-            student_id,
-            video_id,
+            resource_id,
             video_file_path,
             scatt_data,
             waveform_digest_data,

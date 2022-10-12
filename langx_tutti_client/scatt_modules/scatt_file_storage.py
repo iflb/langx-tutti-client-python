@@ -130,9 +130,7 @@ async def _upload_data(
 
 async def upload_resources(
     duct,
-    student_id: str,
-    video_id: str,
-    video_file_name: str,
+    resource_id: str,
     video_data: bytes,
     scatt_data: str,
     waveform_digest_data: bytes,
@@ -155,19 +153,14 @@ async def upload_resources(
         await _create_directory(duct, ANNOTATION_GROUP_NAME, ROOT_DIR)
         await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, ROOT_DIR, ANNOTATION_ROOT_DIR_NAME)
 
-    student_dir = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, student_id))
-    if not await _content_exists(duct, ANNOTATION_GROUP_NAME, student_dir):
-        await _create_directory(duct, ANNOTATION_GROUP_NAME, student_dir)
-        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, ANNOTATION_ROOT_DIR_NAME, student_dir)
-
-    video_dir = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, student_id, video_id))
-    if not await _content_exists(duct, ANNOTATION_GROUP_NAME, video_dir):
-        await _create_directory(duct, ANNOTATION_GROUP_NAME, video_dir)
-        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, student_dir, video_dir)
+    resource_dir = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id))
+    if not await _content_exists(duct, ANNOTATION_GROUP_NAME, resource_dir):
+        await _create_directory(duct, ANNOTATION_GROUP_NAME, resource_dir)
+        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, ANNOTATION_ROOT_DIR_NAME, resource_dir)
 
     last_modified_sec = int(datetime.now(timezone.utc).timestamp())
 
-    video_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, student_id, video_id, video_file_name))
+    video_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'video'))
     if await _content_exists(duct, VIDEO_GROUP_NAME, video_file_path) and not overwrite:
         raise ScattFileStorageError('{0:s} already exists'.format(video_file_path))
     await _upload_data(
@@ -184,24 +177,34 @@ async def upload_resources(
         video_file_path,
     )
 
-    wav_digest_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, student_id, video_id, video_id + '.wav.digest'))
-    if await _content_exists(duct, WAV_DIGEST_GROUP_NAME, wav_digest_file_path) and not overwrite:
-        raise ScattFileStorageError('{0:s} already exists'.format(wav_digest_file_path))
-    await _upload_data(
-        duct,
-        waveform_digest_data, 
-        WAV_DIGEST_GROUP_NAME,
-        wav_digest_file_path,
-        overwrite,
-        last_modified_sec,
-    )
-    wav_digest_revision_id = await _get_latest_content_revision_id(
-        duct,
-        WAV_DIGEST_GROUP_NAME,
-        wav_digest_file_path,
-    )
+    metadata = {
+        'video_group_key': VIDEO_GROUP_NAME,
+        'video_content_key': video_file_path,
+        'video_revision_id': video_revision_id,
+    }
 
-    scatt_data_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, student_id, video_id, video_id + '.json'))
+    if waveform_digest_data is not None:
+        wav_digest_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'video.wav.digest'))
+        if await _content_exists(duct, WAV_DIGEST_GROUP_NAME, wav_digest_file_path) and not overwrite:
+            raise ScattFileStorageError('{0:s} already exists'.format(wav_digest_file_path))
+        await _upload_data(
+            duct,
+            waveform_digest_data, 
+            WAV_DIGEST_GROUP_NAME,
+            wav_digest_file_path,
+            overwrite,
+            last_modified_sec,
+        )
+        wav_digest_revision_id = await _get_latest_content_revision_id(
+            duct,
+            WAV_DIGEST_GROUP_NAME,
+            wav_digest_file_path,
+        )
+        metadata['wav_digest_group_key'] = WAV_DIGEST_GROUP_NAME
+        metadata['wav_digest_content_key'] = wav_digest_file_path
+        metadata['wav_digest_revision_id'] = wav_digest_revision_id
+
+    scatt_data_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'scatt_data.json'))
     if await _content_exists(duct, ANNOTATION_GROUP_NAME, scatt_data_file_path) and not overwrite:
         raise ScattFileStorageError('{0:s} already exists'.format(scatt_data_file_path))
     await _upload_data(
@@ -211,17 +214,10 @@ async def upload_resources(
         scatt_data_file_path,
         overwrite,
         last_modified_sec,
-        **{
-            'video_group_key': VIDEO_GROUP_NAME,
-            'video_content_key': video_file_path,
-            'video_revision_id': video_revision_id,
-            'wav_digest_group_key': WAV_DIGEST_GROUP_NAME,
-            'wav_digest_content_key': wav_digest_file_path,
-            'wav_digest_revision_id': wav_digest_revision_id,
-        },
+        **metadata,
     )
-    if not await _has_file(duct, ANNOTATION_GROUP_NAME, video_dir, scatt_data_file_path):
-        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, video_dir, scatt_data_file_path)
+    if not await _has_file(duct, ANNOTATION_GROUP_NAME, resource_dir, scatt_data_file_path):
+        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, resource_dir, scatt_data_file_path)
 
 
 async def get_uploaded_resource_info(duct):

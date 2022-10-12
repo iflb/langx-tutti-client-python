@@ -37,12 +37,11 @@ async def main():
 
         if mode == 'publish':
             automation_parameter_set_id = sys.argv[2]
-            if len(sys.argv) < 5:
-                print('Usage:  python example.py publish <automation_parameter_set_id> <student_id> <video_id> <video_file_path> <csv_file_path>')
+            if len(sys.argv) < 4:
+                print('Usage:  python example.py publish <automation_parameter_set_id> <resource_id> <video_file_path> <csv_file_path>')
                 print('')
             else:
-                student_id = sys.argv[3]
-                video_id = sys.argv[4]
+                resource_id = sys.argv[3]
                 try:
                     video_file_path = sys.argv[5]
                 except:
@@ -54,8 +53,7 @@ async def main():
 
                 ngid, jid = await client.publish_scatt_tasks_to_market(
                         automation_parameter_set_id,
-                        student_id = student_id,
-                        video_id = video_id,
+                        resource_id = resource_id,
                         video_file_path = video_file_path,
                         csv_file_path = csv_file_path,
                         overwrite = False,
