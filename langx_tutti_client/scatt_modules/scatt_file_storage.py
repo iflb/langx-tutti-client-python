@@ -15,10 +15,12 @@ class ScattFileResourceInfo():
         self,
         last_modified: str,
         content_length: str,
+        raw_content_metadata: dict,
     ):
         from datetime import datetime, timezone
         self.last_modified = datetime.fromtimestamp(int(last_modified), timezone.utc)
         self.content_length = int(content_length)
+        self.raw_content_metadata = raw_content_metadata
 
 
 async def _has_file(duct, group_name, parent_content_path, child_content_path):
@@ -241,6 +243,7 @@ async def get_uploaded_resource_info(duct):
                 resource_info[file_name] = ScattFileResourceInfo(
                     content_metadata['last_modified'],
                     content_metadata['content_length'],
+                    content_metadata,
                 )
 
         return resource_info
