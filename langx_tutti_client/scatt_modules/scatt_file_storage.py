@@ -2,7 +2,7 @@ ANNOTATION_GROUP_NAME = 'annotation'
 WAV_DIGEST_GROUP_NAME = 'wav.digest'
 VIDEO_GROUP_NAME = 'video'
 ROOT_DIR = '/'
-ANNOTATION_ROOT_DIR_NAME = '/template'
+RESOURCES_ROOT_DIR_NAME = '/resources'
 
 
 class ScattFileStorageError(Exception):
@@ -148,23 +148,11 @@ async def upload_resources(
             if not group_exists:
                 raise Exception('Failed to add group({0:s}).'.format(group_name))
 
-    if not await _content_exists(duct, ANNOTATION_GROUP_NAME, ANNOTATION_ROOT_DIR_NAME):
-        await _create_directory(duct, ANNOTATION_GROUP_NAME, ANNOTATION_ROOT_DIR_NAME)
-
-    if not await _content_exists(duct, ANNOTATION_GROUP_NAME, ROOT_DIR):
-        await _create_directory(duct, ANNOTATION_GROUP_NAME, ROOT_DIR)
-        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, ROOT_DIR, ANNOTATION_ROOT_DIR_NAME)
-
-    resource_dir = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id))
-    if not await _content_exists(duct, ANNOTATION_GROUP_NAME, resource_dir):
-        await _create_directory(duct, ANNOTATION_GROUP_NAME, resource_dir)
-        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, ANNOTATION_ROOT_DIR_NAME, resource_dir)
-
     last_modified_sec = int(datetime.now(timezone.utc).timestamp())
     metadata = {}
 
     if waveform_digest_data is not None:
-        wav_digest_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'video.wav.digest'))
+        wav_digest_file_path = path.normpath(path.join(RESOURCES_ROOT_DIR_NAME, resource_id, 'video.wav.digest'))
         if await _content_exists(duct, WAV_DIGEST_GROUP_NAME, wav_digest_file_path) and not overwrite:
             raise ScattFileStorageError('{0:s} already exists'.format(wav_digest_file_path))
         await _upload_data(
@@ -185,7 +173,7 @@ async def upload_resources(
         metadata['wav_digest_revision_id'] = wav_digest_revision_id
 
     if scatt_data is not None:
-        scatt_data_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'scatt_data.json'))
+        scatt_data_file_path = path.normpath(path.join(RESOURCES_ROOT_DIR_NAME, resource_id, 'scatt_data.json'))
         if await _content_exists(duct, ANNOTATION_GROUP_NAME, scatt_data_file_path) and not overwrite:
             raise ScattFileStorageError('{0:s} already exists'.format(scatt_data_file_path))
         await _upload_data(
@@ -207,7 +195,19 @@ async def upload_resources(
             'scatt_data_revision_id': scatt_data_revision_id,
         }
 
-    video_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'video'))
+    if not await _content_exists(duct, VIDEO_GROUP_NAME, RESOURCES_ROOT_DIR_NAME):
+        await _create_directory(duct, VIDEO_GROUP_NAME, RESOURCES_ROOT_DIR_NAME)
+
+    if not await _content_exists(duct, VIDEO_GROUP_NAME, ROOT_DIR):
+        await _create_directory(duct, VIDEO_GROUP_NAME, ROOT_DIR)
+        await _add_file_to_directory(duct, VIDEO_GROUP_NAME, ROOT_DIR, RESOURCES_ROOT_DIR_NAME)
+
+    resource_dir = path.normpath(path.join(RESOURCES_ROOT_DIR_NAME, resource_id))
+    if not await _content_exists(duct, VIDEO_GROUP_NAME, resource_dir):
+        await _create_directory(duct, VIDEO_GROUP_NAME, resource_dir)
+        await _add_file_to_directory(duct, VIDEO_GROUP_NAME, RESOURCES_ROOT_DIR_NAME, resource_dir)
+
+    video_file_path = path.normpath(path.join(RESOURCES_ROOT_DIR_NAME, resource_id, 'video'))
     if await _content_exists(duct, VIDEO_GROUP_NAME, video_file_path) and not overwrite:
         raise ScattFileStorageError('{0:s} already exists'.format(video_file_path))
     await _upload_data(
@@ -219,8 +219,9 @@ async def upload_resources(
         last_modified_sec,
         **metadata,
     )
-    if not await _has_file(duct, ANNOTATION_GROUP_NAME, resource_dir, video_file_path):
-        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, resource_dir, video_file_path)
+
+    if not await _has_file(duct, VIDEO_GROUP_NAME, resource_dir, video_file_path):
+        await _add_file_to_directory(duct, VIDEO_GROUP_NAME, resource_dir, video_file_path)
 
 
 async def get_uploaded_resource_info(duct):
@@ -251,7 +252,7 @@ async def get_uploaded_resource_info(duct):
 
         return resource_info
 
-    return await _get_children_resource_info(duct, ANNOTATION_GROUP_NAME, '/')
+    return await _get_children_resource_info(duct, VIDEO_GROUP_NAME, '/')
 
 
 def show_resource_tree(resource_info):
