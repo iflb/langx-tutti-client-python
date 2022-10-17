@@ -206,8 +206,6 @@ async def upload_resources(
             'scatt_data_content_key': scatt_data_file_path,
             'scatt_data_revision_id': scatt_data_revision_id,
         }
-        if not await _has_file(duct, ANNOTATION_GROUP_NAME, resource_dir, scatt_data_file_path):
-            await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, resource_dir, scatt_data_file_path)
 
     video_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'video'))
     if await _content_exists(duct, VIDEO_GROUP_NAME, video_file_path) and not overwrite:
@@ -221,6 +219,8 @@ async def upload_resources(
         last_modified_sec,
         **metadata,
     )
+    if not await _has_file(duct, ANNOTATION_GROUP_NAME, resource_dir, video_file_path):
+        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, resource_dir, video_file_path)
 
 
 async def get_uploaded_resource_info(duct):
