@@ -161,29 +161,7 @@ async def upload_resources(
         await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, ANNOTATION_ROOT_DIR_NAME, resource_dir)
 
     last_modified_sec = int(datetime.now(timezone.utc).timestamp())
-
-    video_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'video'))
-    if await _content_exists(duct, VIDEO_GROUP_NAME, video_file_path) and not overwrite:
-        raise ScattFileStorageError('{0:s} already exists'.format(video_file_path))
-    await _upload_data(
-        duct,
-        video_data, 
-        VIDEO_GROUP_NAME,
-        video_file_path,
-        overwrite,
-        last_modified_sec,
-    )
-    video_revision_id = await _get_latest_content_revision_id(
-        duct,
-        VIDEO_GROUP_NAME,
-        video_file_path,
-    )
-
-    metadata = {
-        'video_group_key': VIDEO_GROUP_NAME,
-        'video_content_key': video_file_path,
-        'video_revision_id': video_revision_id,
-    }
+    metadata = {}
 
     if waveform_digest_data is not None:
         wav_digest_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'video.wav.digest'))
@@ -206,20 +184,43 @@ async def upload_resources(
         metadata['wav_digest_content_key'] = wav_digest_file_path
         metadata['wav_digest_revision_id'] = wav_digest_revision_id
 
-    scatt_data_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'scatt_data.json'))
-    if await _content_exists(duct, ANNOTATION_GROUP_NAME, scatt_data_file_path) and not overwrite:
-        raise ScattFileStorageError('{0:s} already exists'.format(scatt_data_file_path))
+    if scatt_data is not None:
+        scatt_data_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'scatt_data.json'))
+        if await _content_exists(duct, ANNOTATION_GROUP_NAME, scatt_data_file_path) and not overwrite:
+            raise ScattFileStorageError('{0:s} already exists'.format(scatt_data_file_path))
+        await _upload_data(
+            duct,
+            scatt_data.encode('utf-8'), 
+            ANNOTATION_GROUP_NAME,
+            scatt_data_file_path,
+            overwrite,
+            last_modified_sec,
+        )
+        scatt_data_revision_id = await _get_latest_content_revision_id(
+            duct,
+            ANNOTATION_GROUP_NAME,
+            scatt_data_file_path,
+        )
+        metadata = {
+            'scatt_data_group_key': ANNOTATION_GROUP_NAME,
+            'scatt_data_content_key': scatt_data_file_path,
+            'scatt_data_revision_id': scatt_data_revision_id,
+        }
+        if not await _has_file(duct, ANNOTATION_GROUP_NAME, resource_dir, scatt_data_file_path):
+            await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, resource_dir, scatt_data_file_path)
+
+    video_file_path = path.normpath(path.join(ANNOTATION_ROOT_DIR_NAME, resource_id, 'video'))
+    if await _content_exists(duct, VIDEO_GROUP_NAME, video_file_path) and not overwrite:
+        raise ScattFileStorageError('{0:s} already exists'.format(video_file_path))
     await _upload_data(
         duct,
-        scatt_data.encode('utf-8'), 
-        ANNOTATION_GROUP_NAME,
-        scatt_data_file_path,
+        video_data, 
+        VIDEO_GROUP_NAME,
+        video_file_path,
         overwrite,
         last_modified_sec,
         **metadata,
     )
-    if not await _has_file(duct, ANNOTATION_GROUP_NAME, resource_dir, scatt_data_file_path):
-        await _add_file_to_directory(duct, ANNOTATION_GROUP_NAME, resource_dir, scatt_data_file_path)
 
 
 async def get_uploaded_resource_info(duct):
@@ -236,7 +237,9 @@ async def get_uploaded_resource_info(duct):
         for file_name in sorted(file_info_list.keys()):
             file_info = file_info_list[file_name]
             if file_info['is_dir'] == '1':
-                resource_info[file_name] = await _get_children_resource_info(duct, file_info['group_key'], file_info['content_key'])
+                children_resource_info = await _get_children_resource_info(duct, file_info['group_key'], file_info['content_key'])
+                if len(children_resource_info) > 0:
+                    resource_info[file_name] = children_resource_info
             else:
                 resource_info[file_name] = dict()
                 revision_id, content_metadata = await _get_latest_content_metadata(duct, file_info['group_key'], file_info['content_key'])
