@@ -73,24 +73,26 @@ class ScattDataForCefrScoring():
         return timeline_data
 
     @classmethod
-    def convert_to_data_ver_0_5_for_cefr_scoring(cls, tsv_string: str, author_id: str, author_name: str, created_at: datetime) -> dict:
+    def convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(cls, intella_transcript_body: str, author_id: str, author_name: str, created_at: datetime) -> dict:
         from io import StringIO
+        import re
         scatt_data = cls.generate_empty_data_ver_0_5()
         if len(scatt_data['timeline_data_set'].keys()) > 0:
             new_timeline_data_id_number = int(list(scatt_data['timeline_data_set'].keys())[-1]) + 1
         else:
             new_timeline_data_id_number = 0
         current_target_timeline_data = None
-        tsv_string_io = StringIO(tsv_string)
-        line = tsv_string_io.readline()
+        intella_transcript_body_string_io = StringIO(intella_transcript_body)
+        header = intella_transcript_body_string_io.readline()
+        line = intella_transcript_body_string_io.readline()
         while len(line) > 0:
             stripped_line = line.strip()
             if len(stripped_line) > 0:
-                split_line = stripped_line.strip().split('\t', 9)
-                timeline_data_name = split_line[0]
-                begin_time_msec = float(split_line[3]) * 1000
-                end_time_msec = float(split_line[5]) * 1000
-                label = split_line[8]
+                begin_time_string, end_time_string, topic, timeline_data_name, label = stripped_line.strip().split('\t', 9)
+                begin_hour, begin_min, begin_sec, begin_msec = map(int, re.split('[:.]', begin_time_string))
+                begin_time_msec = begin_msec + begin_sec * 1000 + begin_min * 60000 + begin_hour * 3600000
+                end_hour, end_min, end_sec, end_msec = map(int, re.split('[:.]', end_time_string))
+                end_time_msec = end_msec + end_sec * 1000 + end_min * 60000 + end_hour * 3600000
                 target_timeline_data = None
                 if (current_target_timeline_data is not None) and (current_target_timeline_data['name'] == timeline_data_name):
                     target_timeline_data = current_target_timeline_data
@@ -113,9 +115,10 @@ class ScattDataForCefrScoring():
                         new_timeline_data_id_number = new_timeline_data_id_number + 1
                 new_timeline_segment_id_number = len(target_timeline_data['segments'].keys())
                 new_timeline_segment_id = str(new_timeline_segment_id_number)
-                target_timeline_data['segments'][new_timeline_segment_id] = cls._generate_label_timeline_segment(begin_time_msec, end_time_msec, label)
+                target_timeline_data['segments'][new_timeline_segment_id] = cls._generate_label_timeline_segment(begin_time_msec, end_time_msec, label, topic)
                 current_target_timeline_data = target_timeline_data
-            line = tsv_string_io.readline()
+            line = intella_transcript_body_string_io.readline()
+        print(scatt_data)
         return scatt_data
 
 
@@ -173,22 +176,30 @@ def generate_empty_data(
         raise ScattDataUtilsError("data version {0:s} is not supported.")
 
 
-def convert_to_data_for_cefr_scoring_from_elan_tsv(
-    tsv_string: str,
+def convert_to_data_for_cefr_scoring_from_intella_transcript(
+    intella_transcript_string: str,
     author_id: str,
     author_name: str,
     created_at: datetime,
     data_version: str = LATEST_SCATT_DATA_VERSION,
 ) -> dict:
-    if data_version == '0.5':
-        return ScattDataForCefrScoring.convert_to_data_ver_0_5_for_cefr_scoring(
-            tsv_string,
-            author_id,
-            author_name,
-            created_at,
-        )
+    import re
+    intella_transcript_header, intella_transcript_body = re.split('(?:\r\n|\r|\n)', intella_transcript_string, 1)
+    intella_transcript_header_search_result = re.search('format:\s*intella-transcript-v(?P<version_number>\S+)', intella_transcript_header)
+    if intella_transcript_header_search_result is None:
+        raise ScattDataUtilsError("invalid intella transcript header.")
     else:
-        raise ScattDataUtilsError("data version {0:s} is not supported.")
+        if data_version == '0.5':
+            if intella_transcript_header_search_result['version_number'] == '2.0':
+                return ScattDataForCefrScoring.convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(
+                    intella_transcript_body,
+                    author_id,
+                    author_name,
+                    created_at,
+                )
+        else:
+            raise ScattDataUtilsError("data version {0:s} is not supported.")
+
 
 def convert_to_data_for_cefr_scoring_from_csv(
     tsv_string: str,

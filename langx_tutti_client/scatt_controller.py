@@ -29,21 +29,21 @@ class ScattController:
         return json.dumps(scatt_data)
 
     @staticmethod
-    def convert_to_data_for_cefr_scoring_from_elan_tsv(
-        tsv_string: str,
+    def convert_to_data_for_cefr_scoring_from_intella_transcript(
+        intella_transcript_string: str,
         author_id: str = DEFAULT_AUTHOR_ID,
         author_name: str = DEFAULT_AUTHOR_NAME,
     ) -> str:
-        '''予めELANを用いて作成したアノテーションデータをTSV形式でエクスポートしたデータをもとに、
+        '''予め作成した Intella transcript 形式のデータをもとに、
         CEFRスコアリングタスク向けのScattデータをオンメモリで作成します。
 
         Args:
-            tsv_string: TSV形式でエクスポートされたELANのアノテーションデータの文字列
+            intella_transcript_string: Intella transcript 形式のデータの文字列
             author_id: Scattデータに埋め込まれる、データ作成者のID(Scattが識別子として利用します)
             author_name: Scattデータに埋め込まれる、データ作成者の名前
         '''
-        scatt_data = scatt_data_utils.convert_to_data_for_cefr_scoring_from_elan_tsv(
-            tsv_string,
+        scatt_data = scatt_data_utils.convert_to_data_for_cefr_scoring_from_intella_transcript(
+            intella_transcript_string,
             author_id,
             author_name,
             datetime.now(timezone.utc)
@@ -211,7 +211,7 @@ class ScattController:
         overwrite: bool = False,
     ) -> None:
         '''入力された動画ファイルから音声波形ダイジェストデータを、
-        ELANを用いて作成されたアノテーションデータをTSV形式でエクスポートしたファイルからScattデータを生成し、
+        Intella transcript 形式のファイルからScattデータを生成し、
         それらをScattリソースサーバーにアップロードします。
 
         このクラスに実装された関数を組み合わせてバッチ的に複合的な処理を行う関数であるため、
@@ -239,7 +239,7 @@ class ScattController:
             scatt_data = ScattController.generate_empty_data()
         else:
             with open(elan_tsv_file_path, 'rt') as file:
-                scatt_data = ScattController.convert_to_data_for_cefr_scoring_from_elan_tsv(file.read())
+                scatt_data = ScattController.convert_to_data_for_cefr_scoring_from_intella_transcript(file.read())
         print('<<< generating Scatt data completed.')
 
         await self.upload_scatt_resources_to_server(
