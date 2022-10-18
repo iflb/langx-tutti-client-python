@@ -213,11 +213,15 @@ async def upload_resources(
 
     if not await _content_exists(duct, VIDEO_GROUP_NAME, RESOURCES_ROOT_DIR_NAME):
         await _create_directory(duct, VIDEO_GROUP_NAME, RESOURCES_ROOT_DIR_NAME)
+
+    if not await _has_file(duct, VIDEO_GROUP_NAME, ROOT_DIR, RESOURCES_ROOT_DIR_NAME):
         await _add_file_to_directory(duct, VIDEO_GROUP_NAME, ROOT_DIR, RESOURCES_ROOT_DIR_NAME)
 
     resource_dir = path.normpath(path.join(RESOURCES_ROOT_DIR_NAME, resource_id))
     if not await _content_exists(duct, VIDEO_GROUP_NAME, resource_dir):
         await _create_directory(duct, VIDEO_GROUP_NAME, resource_dir)
+
+    if not await _has_file(duct, VIDEO_GROUP_NAME, RESOURCES_ROOT_DIR_NAME, resource_dir):
         await _add_file_to_directory(duct, VIDEO_GROUP_NAME, RESOURCES_ROOT_DIR_NAME, resource_dir)
 
     video_file_path = path.normpath(path.join(resource_dir, 'video'))
