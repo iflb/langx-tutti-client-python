@@ -118,7 +118,6 @@ class ScattDataForCefrScoring():
                 target_timeline_data['segments'][new_timeline_segment_id] = cls._generate_label_timeline_segment(begin_time_msec, end_time_msec, label, topic)
                 current_target_timeline_data = target_timeline_data
             line = intella_transcript_body_string_io.readline()
-        print(scatt_data)
         return scatt_data
 
 
