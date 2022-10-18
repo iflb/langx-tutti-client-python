@@ -2,7 +2,7 @@ ANNOTATION_GROUP_NAME = 'annotation'
 WAV_DIGEST_GROUP_NAME = 'wav.digest'
 VIDEO_GROUP_NAME = 'video'
 ROOT_DIR = '/'
-RESOURCES_ROOT_DIR_NAME = 'resources'
+RESOURCES_ROOT_DIR_NAME = '/resources'
 
 
 class ScattFileStorageError(Exception):
