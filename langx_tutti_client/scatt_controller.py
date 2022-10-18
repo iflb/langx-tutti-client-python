@@ -174,6 +174,16 @@ class ScattController:
             print('skipping video normalization')
             return video_file_path
 
+
+    async def delete_scatt_resources(self, resource_id: str) -> None:
+        '''Scattリソース(動画ファイル、Scattデータ、音声波形ダイジェストデータ)を論理削除します。
+
+        Args:
+            resource_id: Scatt リソース ID
+        '''
+        await scatt_file_storage.delete_resources(self._duct, resource_id)
+
+
     async def upload_scatt_resources_to_server(
         self,
         resource_id: str,
