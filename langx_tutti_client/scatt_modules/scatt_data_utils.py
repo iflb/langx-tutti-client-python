@@ -72,6 +72,12 @@ class ScattDataForCefrScoring():
         timeline_data['locked'] = False
         return timeline_data
 
+    @staticmethod
+    def convert_intella_time_string_to_milliseconds(intella_time_string):
+        import re
+        hours, minutes, seconds, milliseconds = map(int, re.split('[:.]', intella_time_string))
+        return milliseconds + seconds * 1000 + minutes * 60000 + hours * 3600000
+
     @classmethod
     def convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(cls, intella_transcript_body: str, author_id: str, author_name: str, created_at: datetime) -> dict:
         from io import StringIO
@@ -89,10 +95,8 @@ class ScattDataForCefrScoring():
             stripped_line = line.strip()
             if len(stripped_line) > 0:
                 begin_time_string, end_time_string, topic, timeline_data_name, label = stripped_line.strip().split('\t', 9)
-                begin_hour, begin_min, begin_sec, begin_msec = map(int, re.split('[:.]', begin_time_string))
-                begin_time_msec = begin_msec + begin_sec * 1000 + begin_min * 60000 + begin_hour * 3600000
-                end_hour, end_min, end_sec, end_msec = map(int, re.split('[:.]', end_time_string))
-                end_time_msec = end_msec + end_sec * 1000 + end_min * 60000 + end_hour * 3600000
+                begin_time_msec = cls.convert_intella_time_string_to_milliseconds(begin_time_string)
+                end_time_msec = cls.convert_intella_time_string_to_milliseconds(end_time_string)
                 target_timeline_data = None
                 if (current_target_timeline_data is not None) and (current_target_timeline_data['name'] == timeline_data_name):
                     target_timeline_data = current_target_timeline_data
