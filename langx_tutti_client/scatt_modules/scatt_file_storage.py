@@ -268,7 +268,7 @@ async def _get_children_resource_info(duct, group_key, parent_dir_content_name):
     return resource_info
 
 
-async def get_user_data_resource_info(duct):
+async def get_user_resource_info(duct):
     return await _get_children_resource_info(duct, ANNOTATION_GROUP_NAME, ROOT_DIR)
 
 

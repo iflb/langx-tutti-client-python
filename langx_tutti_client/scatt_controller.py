@@ -307,10 +307,10 @@ class ScattController:
             overwrite,
         )
 
-    async def get_user_data_resource_info(self) -> dict:
+    async def get_user_resource_info(self) -> dict:
         '''ユーザが作成したScattリソース情報を取得します。
         '''
-        return await scatt_file_storage.get_user_data_resource_info(self._duct)
+        return await scatt_file_storage.get_user_resource_info(self._duct)
 
     async def get_uploaded_resource_info(self) -> dict:
         '''アップロード済みのScattリソース情報を取得します。
