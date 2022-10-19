@@ -72,15 +72,10 @@ class ScattDataForCefrScoring():
         timeline_data['locked'] = False
         return timeline_data
 
-    @staticmethod
-    def convert_intella_time_string_to_milliseconds(intella_time_string):
-        import re
-        hours, minutes, seconds, milliseconds = map(int, re.split('[:.]', intella_time_string))
-        return milliseconds + seconds * 1000 + minutes * 60000 + hours * 3600000
-
     @classmethod
     def convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(cls, intella_transcript_string: str, author_id: str, author_name: str, created_at: datetime) -> dict:
         from io import StringIO
+        from .intella_data_utils import parse_transcript_v2_0_line
         scatt_data = cls.generate_empty_data_ver_0_5()
         if len(scatt_data['timeline_data_set'].keys()) > 0:
             new_timeline_data_id_number = int(list(scatt_data['timeline_data_set'].keys())[-1]) + 1
@@ -92,11 +87,13 @@ class ScattDataForCefrScoring():
         intella_transcript_string_io.readline() # data header
         line = intella_transcript_string_io.readline()
         while len(line) > 0:
-            stripped_line = line.strip()
-            if len(stripped_line) > 0:
-                begin_time_string, end_time_string, topic, timeline_data_name, label = stripped_line.strip().split('\t', 9)
-                begin_time_msec = cls.convert_intella_time_string_to_milliseconds(begin_time_string)
-                end_time_msec = cls.convert_intella_time_string_to_milliseconds(end_time_string)
+            parsed_transcript_data = parse_transcript_v2_0_line(line)
+            if parsed_transcript_data is not None:
+                begin_time_msec = parsed_transcript_data['begin_time_msec']
+                end_time_msec   = parsed_transcript_data['end_time_msec']
+                topic = parsed_transcript_data['topic']
+                timeline_data_name = parsed_transcript_data['speaker']
+                label = parsed_transcript_data['transcript']
                 target_timeline_data = None
                 if (current_target_timeline_data is not None) and (current_target_timeline_data['name'] == timeline_data_name):
                     target_timeline_data = current_target_timeline_data
@@ -186,24 +183,21 @@ def convert_to_data_for_cefr_scoring_from_intella_transcript(
     created_at: datetime,
     data_version: str = LATEST_SCATT_DATA_VERSION,
 ) -> dict:
-    import re
     from io import StringIO
+    from .intella_data_utils import parse_transcript_header
     intella_transcript_string_io = StringIO(intella_transcript_string)
-    intella_transcript_header = intella_transcript_string_io.readline()
-    intella_transcript_header_search_result = re.search('format:\s*intella-transcript-v(?P<version_number>\S+)', intella_transcript_header)
-    if intella_transcript_header_search_result is None:
-        raise ScattDataUtilsError("invalid intella transcript header.")
+    intella_transcript_header_string = intella_transcript_string_io.readline()
+    intella_transcript_header = parse_transcript_header(intella_transcript_header_string)
+    if data_version == '0.5':
+        if intella_transcript_header['version_number'] == '2.0':
+            return ScattDataForCefrScoring.convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(
+                intella_transcript_string,
+                author_id,
+                author_name,
+                created_at,
+            )
     else:
-        if data_version == '0.5':
-            if intella_transcript_header_search_result['version_number'] == '2.0':
-                return ScattDataForCefrScoring.convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(
-                    intella_transcript_string,
-                    author_id,
-                    author_name,
-                    created_at,
-                )
-        else:
-            raise ScattDataUtilsError("data version {0:s} is not supported.")
+        raise ScattDataUtilsError("data version {0:s} is not supported.")
 
 
 def convert_to_data_for_cefr_scoring_from_csv(
