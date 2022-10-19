@@ -240,35 +240,39 @@ async def upload_resources(
     if not await _has_file(duct, VIDEO_GROUP_NAME, resource_dir, video_file_path):
         await _add_file_to_directory(duct, VIDEO_GROUP_NAME, resource_dir, video_file_path)
 
+async def _get_children_resource_info(duct, group_key, parent_dir_content_name):
+    resource_info = dict()
+    file_info_list = await duct.call(duct.EVENT['BLOBS_DIR_LIST_FILES'], {
+        'group_key': group_key,
+        'content_key': parent_dir_content_name,
+    })
+    if '.' in file_info_list.keys():
+        del file_info_list['.']
+    if '..' in file_info_list.keys():
+        del file_info_list['..']
+    for file_name in sorted(file_info_list.keys()):
+        file_info = file_info_list[file_name]
+        if file_info['is_dir'] == '1':
+            children_resource_info = await _get_children_resource_info(duct, file_info['group_key'], file_info['content_key'])
+            if len(children_resource_info) > 0:
+                resource_info[file_name] = children_resource_info
+        else:
+            resource_info[file_name] = dict()
+            revision_id, content_metadata = await _get_latest_content_metadata(duct, file_info['group_key'], file_info['content_key'])
+            resource_info[file_name] = ScattFileResourceInfo(
+                content_metadata['last_modified'],
+                content_metadata['content_length'],
+                content_metadata,
+            )
+
+    return resource_info
+
+
+async def get_user_data_resource_info(duct):
+    return await _get_children_resource_info(duct, ANNOTATION_GROUP_NAME, ROOT_DIR)
+
 
 async def get_uploaded_resource_info(duct):
-    async def _get_children_resource_info(duct, group_key, parent_dir_content_name):
-        resource_info = dict()
-        file_info_list = await duct.call(duct.EVENT['BLOBS_DIR_LIST_FILES'], {
-            'group_key': group_key,
-            'content_key': parent_dir_content_name,
-        })
-        if '.' in file_info_list.keys():
-            del file_info_list['.']
-        if '..' in file_info_list.keys():
-            del file_info_list['..']
-        for file_name in sorted(file_info_list.keys()):
-            file_info = file_info_list[file_name]
-            if file_info['is_dir'] == '1':
-                children_resource_info = await _get_children_resource_info(duct, file_info['group_key'], file_info['content_key'])
-                if len(children_resource_info) > 0:
-                    resource_info[file_name] = children_resource_info
-            else:
-                resource_info[file_name] = dict()
-                revision_id, content_metadata = await _get_latest_content_metadata(duct, file_info['group_key'], file_info['content_key'])
-                resource_info[file_name] = ScattFileResourceInfo(
-                    content_metadata['last_modified'],
-                    content_metadata['content_length'],
-                    content_metadata,
-                )
-
-        return resource_info
-
     return await _get_children_resource_info(duct, VIDEO_GROUP_NAME, ROOT_DIR)
 
 
