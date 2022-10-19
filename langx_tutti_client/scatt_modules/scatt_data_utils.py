@@ -79,18 +79,18 @@ class ScattDataForCefrScoring():
         return milliseconds + seconds * 1000 + minutes * 60000 + hours * 3600000
 
     @classmethod
-    def convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(cls, intella_transcript_body: str, author_id: str, author_name: str, created_at: datetime) -> dict:
+    def convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(cls, intella_transcript_string: str, author_id: str, author_name: str, created_at: datetime) -> dict:
         from io import StringIO
-        import re
         scatt_data = cls.generate_empty_data_ver_0_5()
         if len(scatt_data['timeline_data_set'].keys()) > 0:
             new_timeline_data_id_number = int(list(scatt_data['timeline_data_set'].keys())[-1]) + 1
         else:
             new_timeline_data_id_number = 0
         current_target_timeline_data = None
-        intella_transcript_body_string_io = StringIO(intella_transcript_body)
-        header = intella_transcript_body_string_io.readline()
-        line = intella_transcript_body_string_io.readline()
+        intella_transcript_string_io = StringIO(intella_transcript_string)
+        intella_transcript_string_io.readline() # intella transcript header
+        intella_transcript_string_io.readline() # data header
+        line = intella_transcript_string_io.readline()
         while len(line) > 0:
             stripped_line = line.strip()
             if len(stripped_line) > 0:
@@ -121,7 +121,7 @@ class ScattDataForCefrScoring():
                 new_timeline_segment_id = str(new_timeline_segment_id_number)
                 target_timeline_data['segments'][new_timeline_segment_id] = cls._generate_label_timeline_segment(begin_time_msec, end_time_msec, label, topic)
                 current_target_timeline_data = target_timeline_data
-            line = intella_transcript_body_string_io.readline()
+            line = intella_transcript_string_io.readline()
         return scatt_data
 
 
@@ -187,7 +187,9 @@ def convert_to_data_for_cefr_scoring_from_intella_transcript(
     data_version: str = LATEST_SCATT_DATA_VERSION,
 ) -> dict:
     import re
-    intella_transcript_header, intella_transcript_body = re.split('(?:\r\n|\r|\n)', intella_transcript_string, 1)
+    from io import StringIO
+    intella_transcript_string_io = StringIO(intella_transcript_string)
+    intella_transcript_header = intella_transcript_string_io.readline()
     intella_transcript_header_search_result = re.search('format:\s*intella-transcript-v(?P<version_number>\S+)', intella_transcript_header)
     if intella_transcript_header_search_result is None:
         raise ScattDataUtilsError("invalid intella transcript header.")
@@ -195,7 +197,7 @@ def convert_to_data_for_cefr_scoring_from_intella_transcript(
         if data_version == '0.5':
             if intella_transcript_header_search_result['version_number'] == '2.0':
                 return ScattDataForCefrScoring.convert_intella_transcript_v2_0_to_data_ver_0_5_for_cefr_scoring(
-                    intella_transcript_body,
+                    intella_transcript_string,
                     author_id,
                     author_name,
                     created_at,
