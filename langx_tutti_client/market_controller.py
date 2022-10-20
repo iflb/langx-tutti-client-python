@@ -21,6 +21,54 @@ class TuttiMarketController:
         '''
         await self._duct.open(wsd_url)
 
+    async def create_job_class(
+        self,
+        url: str,
+        title: str,
+        expired_at: int,
+        time_limit: int,
+        target_party_ids: Optional[list] = ['all'],
+        rewards: Optional[int] = 0,
+        job_class_parameter: Optional[None] = None,
+        description: Optional[str] = None,
+        closed_at: Optional[int] = None,
+        assignability: Optional[str] = None,
+        job_progress_data_type: Optional[str] = None,
+        priority_score: Optional[int] = None,
+    ):
+        '''ジョブクラスを作成します。
+
+        Args:
+            url: ジョブクラスのURL
+            title: ジョブクラスのタイトル
+            expired_at: ジョブクラスの有効期限UTC時刻のタイムスタンプ(ミリ秒)
+            time_limit: のタイムスタンプ(ミリ秒)
+            target_party_ids: 割り当て対象となるワーカー・ワーカーグループのIDリスト
+            rewards: ワーカーへの報酬(単位は未規定)
+            job_class_parameter: ジョブから参照されるジョブクラス固有のパラメータ
+            description: ジョブクラスの説明文
+            closed_at: ジョブクラスの開始期限UTC時刻のタイムスタンプ(ミリ秒)
+            assignability: ワーカーへの割り当て制限種別名(unlimited/once_per_job/once_per_job_class)
+            job_progress_data_type: ジョブの進捗状況データ型(no_data/rational/percentage/rate/label)
+            priority_score: 優先度。値が小さいほど優先度が高く、優先的にワーカーへ割り当てられます。
+        '''
+        data = await self._duct.call(self._duct.EVENT['CREATE_JOB_CLASS'], {
+                'access_token': self.access_token,
+                'url': url,
+                'title': title,
+                'rewards': rewards,
+                'expired_at': expired_at,
+                'time_limit': time_limit,
+                'target_party_ids': target_party_ids,
+                'job_class_parameter': job_class_parameter,
+                'description': description,
+                'closed_at': closed_at,
+                'assignability': assignability,
+                'job_progress_data_type': job_progress_data_type,
+                'priority_score': priority_score,
+            })
+        return data
+
     async def register_job(
         self,
         job_class_id: str,
