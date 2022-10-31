@@ -96,12 +96,37 @@ class TuttiMarketController:
             })
         return data
 
-    async def sign_in(self, user_id: str, password: str, access_token_lifetime: int):
+    async def get_worker_ids(self) -> dict:
+        '''全てのワーカーのIDを取得します。
+        '''
+        data = await self._duct.call(self._duct.EVENT['GET_USER_IDS'], {
+                'access_token': self.access_token,
+                'user_role_groups': [ 'workable' ],
+            })
+        return data
+
+    async def get_worker_group_ids(self) -> dict:
+        '''全てのワーカーグループのIDを取得します。
+        '''
+        data = await self._duct.call(self._duct.EVENT['GET_WORKER_GROUP_IDS'], {
+                'access_token': self.access_token,
+            })
+        return data
+
+    async def sign_in(
+        self,
+        user_id: str,
+        password: Optional[str] = None,
+        password_hash: Optional[str] = None,
+        access_token_lifetime: Optional[int] = None,
+    ):
         '''Tutti.marketにサインインします。
         '''
+        if password is not None:
+            password_hash = hashlib.sha512(password.encode('ascii')).digest()
         data = await self._duct.call(self._duct.EVENT['SIGN_IN'], {
             'user_id': user_id,
-            'password_hash': hashlib.sha512(password.encode('ascii')).digest(),
+            'password_hash': password_hash,
             'access_token_lifetime': access_token_lifetime
         })
         self.access_token = data['body']['access_token']
