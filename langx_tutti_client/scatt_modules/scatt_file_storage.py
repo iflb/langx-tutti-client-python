@@ -202,11 +202,9 @@ async def upload_resources(
             ANNOTATION_GROUP_NAME,
             scatt_data_file_path,
         )
-        metadata = {
-            'scatt_data_group_key': ANNOTATION_GROUP_NAME,
-            'scatt_data_content_key': scatt_data_file_path,
-            'scatt_data_revision_id': scatt_data_revision_id,
-        }
+        metadata['scatt_data_group_key'] = ANNOTATION_GROUP_NAME
+        metadata['scatt_data_content_key'] = scatt_data_file_path
+        metadata['scatt_data_revision_id'] = scatt_data_revision_id
 
     if not await _content_exists(duct, VIDEO_GROUP_NAME, ROOT_DIR):
         await _create_directory(duct, VIDEO_GROUP_NAME, ROOT_DIR)
