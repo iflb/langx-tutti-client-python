@@ -96,6 +96,18 @@ class TuttiMarketController:
             })
         return data
 
+    async def get_job(self, job_id: str) -> dict:
+        '''ジョブを取得します。
+
+        Args:
+            job_id: ジョブID
+        '''
+        data = await self._duct.call(self._duct.EVENT['GET_JOB'], {
+                'access_token': self.access_token,
+                'job_id': job_id,
+            })
+        return data
+
     async def get_worker_ids(self) -> dict:
         '''全てのワーカーのIDを取得します。
         '''
