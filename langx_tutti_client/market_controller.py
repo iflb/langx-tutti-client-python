@@ -69,6 +69,21 @@ class TuttiMarketController:
             })
         return data
 
+    async def close_job_class(
+        self,
+        job_class_id: str,
+    ):
+        '''ジョブクラスをクローズします。
+
+        Args:
+            job_class_id: ジョブクラスのID
+        '''
+        data = await self._duct.call(self._duct.EVENT['CLOSE_JOB_CLASS'], {
+                'access_token': self.access_token,
+                'job_class_id': job_class_id,
+            })
+        return data
+
     async def register_job(
         self,
         job_class_id: str,
@@ -103,6 +118,21 @@ class TuttiMarketController:
             job_id: ジョブID
         '''
         data = await self._duct.call(self._duct.EVENT['GET_JOB'], {
+                'access_token': self.access_token,
+                'job_id': job_id,
+            })
+        return data
+
+    async def close_job(
+        self,
+        job_id: str,
+    ):
+        '''ジョブをクローズします。
+
+        Args:
+            job_id: ジョブのID
+        '''
+        data = await self._duct.call(self._duct.EVENT['CLOSE_JOB'], {
                 'access_token': self.access_token,
                 'job_id': job_id,
             })
