@@ -16,7 +16,7 @@ def parse_transcript_header(transcript_header_string):
         raise IntellaDataUtilsError('invalid intella transcript header.')
     else:
         return {
-          'version_number': transcript_header_search_result['version_number'],
+            'version_number': transcript_header_search_result['version_number'],
         }
 
 
@@ -46,7 +46,7 @@ def parse_log_header(log_header_string):
         raise IntellaDataUtilsError('invalid intella log header.')
     else:
         return {
-          'version_number': log_header_search_result['version_number'],
+            'version_number': log_header_search_result['version_number'],
         }
 
 
