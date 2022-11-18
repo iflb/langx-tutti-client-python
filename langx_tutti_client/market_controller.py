@@ -26,6 +26,21 @@ class TuttiMarketController:
         '''
         self._duct.close()
 
+    async def get_job_class(
+        self,
+        job_class_id: str,
+    ):
+        '''ジョブクラスを取得します。
+
+        Args:
+            job_class_id: ジョブクラスのID
+        '''
+        data = await self._duct.call(self._duct.EVENT['GET_JOB_CLASS'], {
+                'access_token': self.access_token,
+                'job_class_id': job_class_id,
+            })
+        return data
+
     async def create_job_class(
         self,
         url: str,
