@@ -55,6 +55,7 @@ class TuttiMarketController:
         assignability: Optional[str] = None,
         job_progress_data_type: Optional[str] = None,
         priority_score: Optional[int] = None,
+        choose_job_by: Optional[str] = None,
     ):
         '''ジョブクラスを作成します。
 
@@ -71,6 +72,7 @@ class TuttiMarketController:
             assignability: ワーカーへの割り当て制限種別名(unlimited/once_per_job/once_per_job_class)
             job_progress_data_type: ジョブの進捗状況データ型(no_data/rational/percentage/rate/label)
             priority_score: 優先度。値が小さいほど優先度が高く、優先的にワーカーへ割り当てられます。
+            choose_job_by: 最高優先度がジョブが複数ある場合にジョブを1つ選択する基準(random/first_registered_at/last_registered_at)
         '''
         data = await self._duct.call(self._duct.EVENT['CREATE_JOB_CLASS'], {
                 'access_token': self.access_token,
@@ -86,6 +88,7 @@ class TuttiMarketController:
                 'assignability': assignability,
                 'job_progress_data_type': job_progress_data_type,
                 'priority_score': priority_score,
+                'choose_job_by': choose_job_by,
             })
         return data
 
